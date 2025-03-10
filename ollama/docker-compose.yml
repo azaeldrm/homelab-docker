@@ -1,0 +1,28 @@
+services:
+  ollama:
+    image: ollama/ollama:latest  # Change from `rocm` to `latest` (CUDA-compatible)
+    container_name: ollama
+    restart: unless-stopped
+    network_mode: "host"
+    privileged: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all  # Use all GPUs (change to "1" if using only one GPU)
+              capabilities: [gpu]
+    volumes:
+      - ollama:/root/.ollama
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+    cap_add:
+      - SYS_NICE
+    mem_limit: 8g
+    memswap_limit: 8g
+    cpus: "4"
+
+volumes:
+  ollama:

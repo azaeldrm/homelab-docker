@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  hyperion:
+    image: sirfragalot/hyperion.ng:latest
+    container_name: hyperion
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - ./data:/config

@@ -1,0 +1,11 @@
+# Ignore environment files
+.env
+*.pem
+*.key
+*.crt
+
+# Ignore logs and sensitive data
+*.log
+secrets/
+data/
+models/
