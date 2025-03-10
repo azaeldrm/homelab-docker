@@ -1,17 +1,18 @@
 #!/bin/bash
 
 # Set base directory
-BASE_DIR="$HOME/docker"
+BASE_DIR="$HOME/docker-services"
 
 # Check if the correct number of arguments is passed
-if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <service_name> <up|down>"
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+    echo "Usage: $0 <service_name> <up|down> [r]"
     exit 1
 fi
 
 # Assign input arguments
 SERVICE_NAME=$1
 ACTION=$2
+REBUILD=$3  # If "r" is passed, we rebuild
 
 # Validate action
 if [[ "$ACTION" != "up" && "$ACTION" != "down" ]]; then
@@ -35,6 +36,16 @@ fi
 
 # Execute the action
 echo "Running 'docker compose $ACTION' for $SERVICE_NAME..."
-(cd "$SERVICE_PATH" && docker compose $ACTION -d)
+if [[ "$ACTION" == "up" ]]; then
+    if [[ "$REBUILD" == "r" ]]; then
+        echo "Rebuilding the service..."
+        (cd "$SERVICE_PATH" && docker compose up -d --build)
+    else
+        echo "Starting without rebuilding..."
+        (cd "$SERVICE_PATH" && docker compose up -d)
+    fi
+else
+    (cd "$SERVICE_PATH" && docker compose down)
+fi
 
 echo "Service '$SERVICE_NAME' is now $ACTION-ed."
