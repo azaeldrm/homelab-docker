@@ -1,0 +1,14 @@
+services:
+  frame-tv:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: frame-tv
+    container_name: frame-tv
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - ../../images:/images
+      - ../../uploaded_files.json:/app/uploaded_files.json
+    command: ["python", "-m", "samsung-tv-ws-api.example.async_art_update_from_directory", "${TV_IP}", "-f", "/images", "-u", "0"]
