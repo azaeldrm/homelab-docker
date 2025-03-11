@@ -19,6 +19,9 @@ services:
               capabilities: [gpu]
     volumes:
       - ~/jupyter_notebooks:/workspace  # Mounts notebook directory
-    command: >
-      bash -c "pip install jupyter && 
-               nohup jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root > /dev/null 2>&1 &"
+    command:
+      - bash
+      - "-c"
+      - |
+        pip install jupyter && \
+        exec jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root
