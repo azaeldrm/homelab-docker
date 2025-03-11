@@ -19,9 +19,12 @@ services:
               capabilities: [gpu]
     volumes:
       - ~/jupyter_notebooks:/workspace  # Mounts notebook directory
+    env_file:
+      - .env
     command:
       - bash
       - "-c"
       - |
         pip install jupyter && \
-        exec jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root
+        exec jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root \
+        --NotebookApp.password="${JUPYTER_PASSWORD}"
