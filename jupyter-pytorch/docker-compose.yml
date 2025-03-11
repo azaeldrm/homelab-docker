@@ -25,6 +25,7 @@ services:
       - bash
       - "-c"
       - |
-        pip install jupyter && \
+        pip install --upgrade pip && \
+        pip install langchain langchain-community langchain-openai && \
         exec jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root \
         --NotebookApp.password="${JUPYTER_PASSWORD}"
