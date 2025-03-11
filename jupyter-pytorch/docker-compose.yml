@@ -25,9 +25,6 @@ services:
       - bash
       - "-c"
       - |
-        python3 -m venv --system-site-packages /workspace/venv && \
-        source /workspace/venv/bin/activate && \
-        pip install --upgrade pip && \
-        pip install jupyter langchain langchain-community && \
+        pip install jupyter && \
         exec jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root \
         --NotebookApp.password="${JUPYTER_PASSWORD}"
