@@ -1,11 +1,42 @@
-# Ignore environment files
+# ─── Environment & Secrets ───────────────────────────────
 .env
+secrets/
+
+# SSL/TLS certificates and private keys
 *.pem
 *.key
 *.crt
 
-# Ignore logs and sensitive data
+# ─── Logs ────────────────────────────────────────────────
 *.log
-secrets/
+
+# ─── Databases & Runtime State ───────────────────────────
+*.sqlite
+*.db
+*.db-shm
+*.db-wal
+*.journal
+
+# n8n runtime data
+n8n/n8n_data/
+
+# syncthing runtime data
+syncthing/index-v2/
+syncthing/syncthing-config/
+syncthing/syncthing.lock
+
+# hyperion runtime data
+hyperion/data/
+
+# ─── Obsidian ────────────────────────────────────────────
+obsidian/config/
+**/.obsidian/
+obsidian/**/.cache/
+obsidian/**/.config/
+obsidian/**/.local/
+obsidian/**/.dbus/
+obsidian/**/.pki/
+
+# ─── Generic Data/Models Folders ─────────────────────────
 data/
 models/

@@ -3,12 +3,20 @@ services:
     image: ghcr.io/open-webui/open-webui:main
     container_name: open-webui
     restart: always
-    network_mode: "host"
     environment:
-      - OLLAMA_BASE_URL=http://127.0.0.1:11434
+      - OLLAMA_BASE_URL=http://ollama:11434
       - NVIDIA_VISIBLE_DEVICES=0,1
     volumes:
       - open-webui:/app/backend/data
+    networks:
+      - internal
+      - caddy-net
 
 volumes:
   open-webui:
+
+networks:
+  internal:
+    external: true
+  caddy-net:
+    external: true

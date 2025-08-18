@@ -3,7 +3,8 @@ services:
     image: ollama/ollama:latest  # Change from `rocm` to `latest` (CUDA-compatible)
     container_name: ollama
     restart: unless-stopped
-    network_mode: "host"
+    ports:
+      - "11434:11434"
     privileged: true
     deploy:
       resources:
@@ -14,6 +15,10 @@ services:
               capabilities: [gpu]
     volumes:
       - ollama:/root/.ollama
+    networks:
+      - internal
+
+    # Optional resource limits
     security_opt:
       - no-new-privileges
     cap_drop:
@@ -26,3 +31,7 @@ services:
 
 volumes:
   ollama:
+
+networks:
+  internal:
+    external: true

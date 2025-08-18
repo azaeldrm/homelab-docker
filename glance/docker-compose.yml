@@ -1,0 +1,19 @@
+# glance/docker-compose.yml
+services:
+  glance:
+    container_name: glance
+    image: glanceapp/glance
+    restart: unless-stopped
+    volumes:
+      - ./config:/app/config
+      - ./assets:/app/assets
+      - /etc/localtime:/etc/localtime:ro
+      # Optionally, also mount docker socket if you want to use the docker containers widget
+      # - /var/run/docker.sock:/var/run/docker.sock:ro
+    env_file: .env
+    networks:
+      - caddy-net
+
+networks:
+  caddy-net:
+    external: true

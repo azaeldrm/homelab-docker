@@ -1,0 +1,21 @@
+# obsidian/docker-compose.yml
+services:
+  obsidian:
+    image: ghcr.io/linuxserver/obsidian:latest
+    container_name: obsidian
+    environment:
+      - PUID=1000     # your user ID
+      - PGID=1000     # your group ID
+      - TZ=America/New_York
+    volumes:
+      - ./config:/config               # container config
+      - ./vault:/vault                 # your Obsidian notes
+    restart: unless-stopped
+    networks:
+      - default
+      - caddy-net
+
+networks:
+  default:
+  caddy-net:
+    external: true

@@ -3,7 +3,6 @@ services:
     image: nvcr.io/nvidia/pytorch:23.10-py3  # NVIDIA PyTorch (optimized for CUDA)
     container_name: jupyter-pytorch
     restart: unless-stopped
-    network_mode: "host"  # Allows access via `http://localhost:8888`
     ipc: "host"  # Optimizes shared memory for ML workloads
     shm_size: "8G"  # Ensures enough memory for Jupyter processes
     cap_add:
@@ -18,7 +17,7 @@ services:
               count: all  # Use all available GPUs
               capabilities: [gpu]
     volumes:
-      - ~/jupyter_notebooks:/workspace  # Mounts notebook directory
+      - ./../../jupyter-notebooks:/workspace  # Mounts notebook directory
     env_file:
       - .env
     command:
@@ -29,3 +28,11 @@ services:
         pip install langchain langchain-ollama && \
         exec jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root \
         --NotebookApp.password="${JUPYTER_PASSWORD}"
+    networks:
+      - default
+      - caddy-net
+
+networks:
+  default:
+  caddy-net:
+    external: true
