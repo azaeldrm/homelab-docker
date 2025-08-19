@@ -16,8 +16,8 @@ ACTION=$2
 FLAGS=${3:-}  # optional; may contain 'p' and/or 'r'
 
 # Validate action
-if [[ "$ACTION" != "up" && "$ACTION" != "down" ]]; then
-    echo "Error: Action must be 'up' or 'down'"
+if [[ "$ACTION" != "u" && "$ACTION" != "d" ]]; then
+    echo "Error: Action must be '(u)p' or '(d)own'"
     exit 1
 fi
 
@@ -42,7 +42,7 @@ fi
 
 echo "Running 'docker compose $ACTION' for $SERVICE_NAME..."
 
-if [[ "$ACTION" == "up" ]]; then
+if [[ "$ACTION" == "u" ]]; then
     # Pull only if 'p' flag present
     if [[ "$FLAGS" == *p* ]]; then
         echo "Pulling latest image for $SERVICE_NAME..."
@@ -61,4 +61,4 @@ else
     (cd "$SERVICE_PATH" && docker compose down) || exit 1
 fi
 
-echo "Service '$SERVICE_NAME' is now $ACTION-ed."
+# echo "Service '$SERVICE_NAME' is now $ACTION-ed."

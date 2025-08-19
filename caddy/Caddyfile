@@ -1,5 +1,4 @@
 # caddy/Caddyfile
-
 obsidian.***REMOVED*** {
   tls internal
   reverse_proxy obsidian:3000

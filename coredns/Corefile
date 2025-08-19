@@ -1,0 +1,18 @@
+# coredns/Corefile
+***REMOVED***:53 {
+	bind ***REMOVED***
+
+	hosts {
+			***REMOVED*** obsidian.***REMOVED***
+			***REMOVED*** openwebui.***REMOVED***
+			***REMOVED*** jupyter.***REMOVED***
+			***REMOVED*** n8n.***REMOVED***
+			***REMOVED*** syncthing.***REMOVED***
+			***REMOVED*** glance.***REMOVED***
+			fallthrough
+	}
+
+	forward . 1.1.1.1 1.0.0.1
+	log
+	errors
+}

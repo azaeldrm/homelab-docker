@@ -1,88 +1,167 @@
 - name: Home
   # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
-  # hide-desktop-navigation: true
+  hide-desktop-navigation: true
   columns:
     - size: small
       widgets:
-        - type: calendar
-          first-day-of-week: monday
-
+        # - type: calendar
+        #   first-day-of-week: monday
+        - type: weather
+          location: Washington, US
+          units: imperial # alternatively "metric"
+          hour-format: 12h # alternatively "24h"
+          # Optionally hide the location from being displayed in the widget
+          hide-location: false
+        - type: markets
+          markets:
+            - symbol: TQQQ
+              name: TQQQ
+            - symbol: BTC-USD
+              name: Bitcoin
+            - symbol: ETH-USD
+              name: Ethereum
+            - symbol: USD-RENDER
+              name: Render Token
         - type: rss
           limit: 10
-          collapse-after: 3
-          cache: 12h
+          collapse-after: 2
+          cache: 8h
           feeds:
             - url: https://selfh.st/rss/
               title: selfh.st
             - url: https://ciechanow.ski/atom.xml
-            - url: https://www.joshwcomeau.com/rss.xml
-              title: Josh Comeau
             - url: https://samwho.dev/rss.xml
-            - url: https://ishadeed.com/feed.xml
-              title: Ahmad Shadeed
-
-        - type: twitch-channels
-          channels:
-            - theprimeagen
-            - j_blow
-            - giantwaffle
-            - cohhcarnage
-            - christitustech
-            - EJ_SA
 
     - size: full
       widgets:
+        - type: search
+          search-engine: google
+          autofocus: true
+          # Optional: Add more search engines to the dropdown
+          bangs:
+            - title: Perplexity
+              shortcut: "!p"
+              url: https://www.perplexity.ai/search?q={QUERY}
+            - title: YouTube
+              shortcut: "!yt"
+              url: https://www.youtube.com/results?search_query={QUERY}
+            - title: Amazon
+              shortcut: "!a"
+              url: https://www.amazon.com/s?k={QUERY}
+
         - type: group
           widgets:
             - type: hacker-news
+              collapse-after: 3
             - type: lobsters
+              collapse-after: 3
 
-        - type: videos
-          channels:
-            - UCXuqSBlHAE6Xw-yeJA0Tunw # Linus Tech Tips
-            - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling
-            - UCsBjURrPoezykLs9EqgamOA # Fireship
-            - UCBJycsmduvYEL83R_U4JriQ # Marques Brownlee
-            - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
+        # - type: videos
+        #   channels:
+        #     - UCXuqSBlHAE6Xw-yeJA0Tunw # Linus Tech Tips
+        #     - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling
+        #     - UCsBjURrPoezykLs9EqgamOA # Fireship
+        #     - UCBJycsmduvYEL83R_U4JriQ # Marques Brownlee
+        #     - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
 
         - type: group
           widgets:
             - type: reddit
               subreddit: technology
               show-thumbnails: true
+              collapse-after: 3
             - type: reddit
               subreddit: selfhosted
               show-thumbnails: true
+              collapse-after: 3
 
     - size: small
       widgets:
-        - type: weather
-          location: London, United Kingdom
-          units: metric # alternatively "imperial"
-          hour-format: 12h # alternatively "24h"
-          # Optionally hide the location from being displayed in the widget
-          # hide-location: true
-
-        - type: markets
-          markets:
-            - symbol: SPY
-              name: S&P 500
-            - symbol: BTC-USD
-              name: Bitcoin
-            - symbol: NVDA
-              name: NVIDIA
-            - symbol: AAPL
-              name: Apple
-            - symbol: MSFT
-              name: Microsoft
+        - type: monitor
+          cache: 1m
+          title: Services
+          style: compact
+          sites:
+            - title: Open WebUI
+              url: http://open-webui:8080
+              icon: sh:open-webui
+            - title: Jupyter Notebook
+              url: http://jupyter-pytorch:8888
+              icon: si:jupyter
+            - title: n8n
+              url: http://n8n:5678
+              icon: si:n8n
+            - title: Syncthing
+              url: http://syncthing:8384
+              icon: si:syncthing
+            - title: Obsidian
+              url: http://obsidian:3000
+              icon: si:obsidian
+        - type: docker-containers
+          hide-by-default: false
+          containers:
+            caddy:
+              name: Caddy
+              description: Reverse proxy
+              icon: si:caddy
+              hide: false
+            coredns:
+              name: CoreDNS
+              description: Container DNS server
+              icon: si:nextdns
+              hide: false
+            glance:
+              name: Glance
+              description: Homelab dashboard
+              icon: sh:glance
+              hide: false
+            open-webui:
+              name: Open WebUI
+              description: Local LLM chat WebUI
+              icon: sh:open-webui
+              hide: false
+            jupyter-pytorch:
+              name: Jupyter Notebook
+              description: Computing environment
+              icon: si:jupyter
+              hide: false
+            n8n:
+              name: n8n
+              description: Workflow automation tool
+              icon: si:n8n
+              hide: false
+            syncthing:
+              name: Syncthing
+              description: File sync tool
+              icon: si:syncthing
+              hide: false
+            obsidian:
+              name: Obsidian
+              description: KB note-taking app
+              icon: si:obsidian
+              hide: false
+            ollama:
+              name: Ollama
+              description: Local LLM server
+              icon: si:ollama
+              hide: false
+            portainer:
+              hide: true
 
         - type: releases
           cache: 1d
           # Without authentication the Github API allows for up to 60 requests per hour. You can create a
           # read-only token from your Github account settings and use it here to increase the limit.
           # token: ...
+          show-source-icon: true
+          collapse-after: 3
+          limit: 10
           repositories:
             - glanceapp/glance
-            - go-gitea/gitea
+            - open-webui/open-webui
             - immich-app/immich
             - syncthing/syncthing
+            - n8n-io/n8n
+            - pi-hole/pi-hole
+            - ollama/ollama
+            - ClassicOldSong/Apollo
