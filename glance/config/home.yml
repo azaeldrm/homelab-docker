@@ -27,6 +27,8 @@
           collapse-after: 2
           cache: 8h
           feeds:
+            - url: https://www.notebookcheck.net/News.152.100.html
+              title: Notebookcheck
             - url: https://selfh.st/rss/
               title: selfh.st
             - url: https://ciechanow.ski/atom.xml

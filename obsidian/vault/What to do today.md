@@ -1,1 +1,0 @@
-Today has been a great day. It's my first time writing in Obsidian.

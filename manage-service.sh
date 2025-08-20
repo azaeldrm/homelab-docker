@@ -3,15 +3,15 @@
 # Set base directory
 BASE_DIR="$HOME/***REMOVED***"
 
-# Args: service, action, optional flags (e.g., p, r, rp)
+# Args: stack_dir, action (u|d), optional flags (e.g., p, r, rp)
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
-    echo "Usage: $0 <service_name> <up|down> [flags]"
-    echo "  flags: p = pull image before up, r = rebuild"
+    echo "Usage: $0 <stack_dir> <u|d> [flags]"
+    echo "  flags: p = pull images before up (whole stack), r = rebuild (use --build)"
     exit 1
 fi
 
-SERVICE_NAME_RAW=$1
-SERVICE_NAME="${SERVICE_NAME_RAW%/}"   # strip one trailing "/"
+STACK_DIR_RAW=$1
+STACK_DIR="${STACK_DIR_RAW%/}"   # accept "karakeep/" or "karakeep"
 ACTION=$2
 FLAGS=${3:-}  # optional; may contain 'p' and/or 'r'
 
@@ -27,38 +27,41 @@ if [[ -n "$FLAGS" && ! "$FLAGS" =~ ^[pr]+$ ]]; then
     exit 1
 fi
 
-SERVICE_PATH="$BASE_DIR/$SERVICE_NAME"
-COMPOSE_FILE="$SERVICE_PATH/docker-compose.yml"
+STACK_PATH="$BASE_DIR/$STACK_DIR"
+COMPOSE_FILE="$STACK_PATH/docker-compose.yml"
 
-if [ ! -d "$SERVICE_PATH" ]; then
-    echo "Error: Service '$SERVICE_NAME' does not exist in $BASE_DIR"
+if [ ! -d "$STACK_PATH" ]; then
+    echo "Error: Stack '$STACK_DIR' does not exist in $BASE_DIR"
     exit 1
 fi
 
 if [ ! -f "$COMPOSE_FILE" ]; then
-    echo "Error: No docker-compose.yml found in $SERVICE_PATH"
+    echo "Error: No docker-compose.yml found in $STACK_PATH"
     exit 1
 fi
 
-echo "Running 'docker compose $ACTION' for $SERVICE_NAME..."
+echo "Running 'docker compose $ACTION' for stack '$STACK_DIR'..."
+
+cd "$STACK_PATH" || exit 1
 
 if [[ "$ACTION" == "u" ]]; then
-    # Pull only if 'p' flag present
+    # Pull only if 'p' flag present (whole stack)
     if [[ "$FLAGS" == *p* ]]; then
-        echo "Pulling latest image for $SERVICE_NAME..."
-        (cd "$SERVICE_PATH" && docker compose pull "$SERVICE_NAME") || exit 1
+        echo "Pulling latest images for stack '$STACK_DIR'..."
+        docker compose pull || exit 1
     fi
 
-    # Rebuild if 'r' flag present
+    # Rebuild if 'r' flag present, otherwise normal up (whole stack)
     if [[ "$FLAGS" == *r* ]]; then
-        echo "Rebuilding the service..."
-        (cd "$SERVICE_PATH" && docker compose up -d --build "$SERVICE_NAME") || exit 1
+        echo "Bringing stack up with rebuild (--build)..."
+        docker compose up -d --build || exit 1
     else
-        echo "Starting without rebuild..."
-        (cd "$SERVICE_PATH" && docker compose up -d "$SERVICE_NAME") || exit 1
+        echo "Bringing stack up without rebuild..."
+        docker compose up -d || exit 1
     fi
 else
-    (cd "$SERVICE_PATH" && docker compose down) || exit 1
+    echo "Bringing stack down..."
+    docker compose down || exit 1
 fi
 
-# echo "Service '$SERVICE_NAME' is now $ACTION-ed."
+# echo "Stack '$STACK_DIR' is now $ACTION-ed."

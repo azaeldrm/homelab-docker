@@ -28,3 +28,8 @@ glance.***REMOVED*** {
   tls internal
   reverse_proxy glance:8080
 }
+
+karakeep.***REMOVED*** {
+  tls internal
+  reverse_proxy karakeep-web-1:3000
+}
