@@ -52,9 +52,9 @@
         - type: group
           widgets:
             - type: hacker-news
-              collapse-after: 3
+              collapse-after: 4
             - type: lobsters
-              collapse-after: 3
+              collapse-after: 4
 
         # - type: videos
         #   channels:
@@ -69,35 +69,36 @@
             - type: reddit
               subreddit: technology
               show-thumbnails: true
-              collapse-after: 3
+              collapse-after: 4
             - type: reddit
               subreddit: selfhosted
               show-thumbnails: true
-              collapse-after: 3
+              collapse-after: 4
 
     - size: small
       widgets:
-        - type: monitor
-          cache: 1m
-          title: Services
-          style: compact
-          sites:
-            - title: Open WebUI
-              url: http://open-webui:8080
-              icon: sh:open-webui
-            - title: Jupyter Notebook
-              url: http://jupyter-pytorch:8888
-              icon: si:jupyter
-            - title: n8n
-              url: http://n8n:5678
-              icon: si:n8n
-            - title: Syncthing
-              url: http://syncthing:8384
-              icon: si:syncthing
-            - title: Obsidian
-              url: http://obsidian:3000
-              icon: si:obsidian
+        # - type: monitor
+        #   cache: 1m
+        #   title: Services
+        #   style: compact
+        #   sites:
+        #     - title: Open WebUI
+        #       url: http://open-webui:8080
+        #       icon: sh:open-webui
+        #     - title: Jupyter Notebook
+        #       url: http://jupyter-pytorch:8888
+        #       icon: si:jupyter
+        #     - title: n8n
+        #       url: http://n8n:5678
+        #       icon: si:n8n
+        #     - title: Syncthing
+        #       url: http://syncthing:8384
+        #       icon: si:syncthing
+        #     - title: Obsidian
+        #       url: http://obsidian:3000
+        #       icon: si:obsidian
         - type: docker-containers
+          running-only: false
           hide-by-default: false
           containers:
             caddy:
@@ -165,3 +166,4 @@
             - pi-hole/pi-hole
             - ollama/ollama
             - ClassicOldSong/Apollo
+            - ClassicOldSong/moonlight-android
