@@ -4,13 +4,15 @@
   columns:
     - size: small
       widgets:
-        # - type: calendar
-        #   first-day-of-week: monday
+        - type: clock
+          hour-format: 12h
+          timezones:
+            - timezone: America/New_York
+              label: Florida
         - type: weather
           location: Washington, US
           units: imperial # alternatively "metric"
-          hour-format: 12h # alternatively "24h"
-          # Optionally hide the location from being displayed in the widget
+          hour-format: 12h
           hide-location: false
         - type: markets
           markets:
@@ -20,19 +22,38 @@
               name: Bitcoin
             - symbol: ETH-USD
               name: Ethereum
-            - symbol: USD-RENDER
-              name: Render Token
-        - type: rss
-          limit: 10
-          collapse-after: 2
-          cache: 8h
-          feeds:
-            - url: https://www.notebookcheck.net/News.152.100.html
-              title: Notebookcheck
-            - url: https://selfh.st/rss/
-              title: selfh.st
-            - url: https://ciechanow.ski/atom.xml
-            - url: https://samwho.dev/rss.xml
+        - type: server-stats
+          servers:
+            - type: local
+              name: Services
+              hide-mountpoints-by-default: true
+              mountpoints:
+                "/":
+                  hide: false
+                "/mnt/data":
+                  hide: false
+        - type: custom-api
+          title: Immich stats
+          cache: 1m
+          url: ${IMMICH_URL}/api/server/statistics
+          headers:
+            x-api-key: ${IMMICH_API_KEY}
+            Accept: application/json
+          template: |
+            <div class="flex justify-between text-center">
+              <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
+                  <div class="size-h6">PHOTOS</div>
+              </div>
+              <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
+                  <div class="size-h6">VIDEOS</div>
+              </div>
+              <div>
+                  <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
+                  <div class="size-h6">USAGE</div>
+              </div>
+            </div>
 
     - size: full
       widgets:
@@ -53,6 +74,17 @@
 
         - type: group
           widgets:
+            - type: rss
+              limit: 20
+              collapse-after: 5
+              cache: 8h
+              feeds:
+                - url: https://www.notebookcheck.net/News.152.100.html
+                  title: Notebookcheck
+                - url: https://selfh.st/rss/
+                  title: selfh.st
+                - url: https://ciechanow.ski/atom.xml
+                - url: https://samwho.dev/rss.xml
             - type: hacker-news
               collapse-after: 4
             - type: lobsters
@@ -71,34 +103,27 @@
             - type: reddit
               subreddit: technology
               show-thumbnails: true
-              collapse-after: 4
+              collapse-after: 5
             - type: reddit
               subreddit: selfhosted
               show-thumbnails: true
-              collapse-after: 4
+              collapse-after: 5
 
     - size: small
       widgets:
-        # - type: monitor
-        #   cache: 1m
-        #   title: Services
-        #   style: compact
-        #   sites:
-        #     - title: Open WebUI
-        #       url: http://open-webui:8080
-        #       icon: sh:open-webui
-        #     - title: Jupyter Notebook
-        #       url: http://jupyter-pytorch:8888
-        #       icon: si:jupyter
-        #     - title: n8n
-        #       url: http://n8n:5678
-        #       icon: si:n8n
-        #     - title: Syncthing
-        #       url: http://syncthing:8384
-        #       icon: si:syncthing
-        #     - title: Obsidian
-        #       url: http://obsidian:3000
-        #       icon: si:obsidian
+        - type: monitor
+          cache: 1m
+          title: Services
+          sites:
+            - title: Immich
+              url: ${IMMICH_URL}
+              icon: si:immich
+            - title: Pi-Hole NAS
+              url: ${PIHOLE_NAS_URL}
+              icon: si:pihole
+            - title: Pi-Hole RPi
+              url: ${PIHOLE_RPI_URL}
+              icon: si:pihole
         - type: docker-containers
           running-only: false
           hide-by-default: false
@@ -107,6 +132,22 @@
               name: Caddy
               description: Reverse proxy
               icon: si:caddy
+              hide: false
+            karakeep-web-1:
+              id: karakeep
+              name: Karakeep
+              description: Bookmark manager
+              icon: auto-invert sh:karakeep
+              hide: false
+            karakeep-meilisearch-1:
+              parent: karakeep
+              name: Karakeep Meilisearch
+              icon: si:meilisearch
+              hide: false
+            karakeep-chrome-1:
+              parent: karakeep
+              name: Karakeep Chrome
+              icon: si:meilisearch
               hide: false
             coredns:
               name: CoreDNS
@@ -152,13 +193,13 @@
               hide: true
 
         - type: releases
-          cache: 1d
+          cache: 6h
           # Without authentication the Github API allows for up to 60 requests per hour. You can create a
           # read-only token from your Github account settings and use it here to increase the limit.
           # token: ...
           show-source-icon: true
           collapse-after: 3
-          limit: 10
+          limit: 20
           repositories:
             - glanceapp/glance
             - open-webui/open-webui

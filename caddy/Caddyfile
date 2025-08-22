@@ -33,3 +33,18 @@ karakeep.***REMOVED*** {
   tls internal
   reverse_proxy karakeep-web-1:3000
 }
+
+immich.***REMOVED*** {
+  tls internal
+  reverse_proxy ***REMOVED***:2283
+}
+
+piholenas.***REMOVED*** {
+  tls internal
+  reverse_proxy ***REMOVED***:8080
+}
+
+piholerpi.***REMOVED*** {
+  tls internal
+  reverse_proxy ***REMOVED***
+}

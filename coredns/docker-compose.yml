@@ -2,10 +2,6 @@
 services:
   coredns:
     image: coredns/coredns:latest
-    labels:
-      glance.name: CoreDNS
-      glance.icon: sh:coredns
-      glance.description: Flexible, modern DNS server for containers.
     container_name: coredns
     volumes:
       - ./Corefile:/Corefile

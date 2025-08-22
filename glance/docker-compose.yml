@@ -10,9 +10,17 @@ services:
       - /etc/localtime:/etc/localtime:ro
       # Optionally, also mount docker socket if you want to use the docker containers widget
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../caddy-root.crt:/usr/local/share/ca-certificates/caddy-root.crt:ro
     env_file: .env
     networks:
       - caddy-net
+    entrypoint: >
+      sh -c "if [ -f /usr/local/share/ca-certificates/caddy-root.crt ]; then
+               grep -qxF \"$(cat /usr/local/share/ca-certificates/caddy-root.crt)\" /etc/ssl/certs/ca-certificates.crt || \
+               cat /usr/local/share/ca-certificates/caddy-root.crt >> /etc/ssl/certs/ca-certificates.crt;
+             fi;
+             exec \"$0\" \"$@\""
+    command: ["/app/glance", "--config", "/app/config/glance.yml"]
 
 networks:
   caddy-net:
