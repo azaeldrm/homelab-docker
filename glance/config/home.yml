@@ -1,6 +1,22 @@
 - name: Home
   # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
   hide-desktop-navigation: true
+  head-widgets:
+    - type: search
+      search-engine: google
+      autofocus: true
+      # Optional: Add more search engines to the dropdown
+      bangs:
+        - title: Perplexity
+          shortcut: "!p"
+          url: https://www.perplexity.ai/search?q={QUERY}
+        - title: YouTube
+          shortcut: "!yt"
+          url: https://www.youtube.com/results?search_query={QUERY}
+        - title: Amazon
+          shortcut: "!a"
+          url: https://www.amazon.com/s?k={QUERY}
+
   columns:
     - size: small
       widgets:
@@ -18,112 +34,17 @@
           markets:
             - symbol: TQQQ
               name: TQQQ
+            - symbol: RENDER-USD
+              name: Render Tkn
+            - symbol: TURBO-USD
+              name: Turbo Tkn
             - symbol: BTC-USD
               name: Bitcoin
             - symbol: ETH-USD
               name: Ethereum
-        - type: server-stats
-          servers:
-            - type: local
-              name: Services
-              hide-mountpoints-by-default: true
-              mountpoints:
-                "/":
-                  hide: false
-                "/mnt/data":
-                  hide: false
-        - type: custom-api
-          title: Immich stats
-          cache: 1m
-          url: ${IMMICH_URL}/api/server/statistics
-          headers:
-            x-api-key: ${IMMICH_API_KEY}
-            Accept: application/json
-          template: |
-            <div class="flex justify-between text-center">
-              <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
-                  <div class="size-h6">PHOTOS</div>
-              </div>
-              <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
-                  <div class="size-h6">VIDEOS</div>
-              </div>
-              <div>
-                  <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
-                  <div class="size-h6">USAGE</div>
-              </div>
-            </div>
 
     - size: full
       widgets:
-        - type: search
-          search-engine: google
-          autofocus: true
-          # Optional: Add more search engines to the dropdown
-          bangs:
-            - title: Perplexity
-              shortcut: "!p"
-              url: https://www.perplexity.ai/search?q={QUERY}
-            - title: YouTube
-              shortcut: "!yt"
-              url: https://www.youtube.com/results?search_query={QUERY}
-            - title: Amazon
-              shortcut: "!a"
-              url: https://www.amazon.com/s?k={QUERY}
-
-        - type: group
-          widgets:
-            - type: rss
-              limit: 20
-              collapse-after: 5
-              cache: 8h
-              feeds:
-                - url: https://www.notebookcheck.net/News.152.100.html
-                  title: Notebookcheck
-                - url: https://selfh.st/rss/
-                  title: selfh.st
-                - url: https://ciechanow.ski/atom.xml
-                - url: https://samwho.dev/rss.xml
-            - type: hacker-news
-              collapse-after: 4
-            - type: lobsters
-              collapse-after: 4
-
-        # - type: videos
-        #   channels:
-        #     - UCXuqSBlHAE6Xw-yeJA0Tunw # Linus Tech Tips
-        #     - UCR-DXc1voovS8nhAvccRZhg # Jeff Geerling
-        #     - UCsBjURrPoezykLs9EqgamOA # Fireship
-        #     - UCBJycsmduvYEL83R_U4JriQ # Marques Brownlee
-        #     - UCHnyfMqiRRG1u-2MsSQLbXA # Veritasium
-
-        - type: group
-          widgets:
-            - type: reddit
-              subreddit: technology
-              show-thumbnails: true
-              collapse-after: 5
-            - type: reddit
-              subreddit: selfhosted
-              show-thumbnails: true
-              collapse-after: 5
-
-    - size: small
-      widgets:
-        - type: monitor
-          cache: 1m
-          title: Services
-          sites:
-            - title: Immich
-              url: ${IMMICH_URL}
-              icon: si:immich
-            - title: Pi-Hole NAS
-              url: ${PIHOLE_NAS_URL}
-              icon: si:pihole
-            - title: Pi-Hole RPi
-              url: ${PIHOLE_RPI_URL}
-              icon: si:pihole
         - type: docker-containers
           running-only: false
           hide-by-default: false
@@ -191,7 +112,83 @@
               hide: false
             portainer:
               hide: true
+        #     - type: rss
+        #       limit: 20
+        #       collapse-after: 4
+        #       cache: 4h
+        #       feeds:
+        #         # - url: https://www.notebookcheck.net/News.152.100.html
+        #         #   title: Notebookcheck
+        #         - url: https://selfh.st/rss/
+        #           title: selfh.st
+        #         - url: https://ciechanow.ski/atom.xml
+        #         - url: https://samwho.dev/rss.xml
+        #     - type: hacker-news
+        #       collapse-after: 4
+        #     - type: lobsters
+        #       collapse-after: 4
+        - type: reddit
+          cache: 2h
+          subreddit: technology
+          show-thumbnails: true
+          collapse-after: 6
+          limit: 10
+        #     - type: reddit
+        #       subreddit: selfhosted
+        #       show-thumbnails: true
+        #       collapse-after: 3
 
+    - size: small
+      widgets:
+        - type: dns-stats
+          service: pihole-v6
+          url: https://piholenas.***REMOVED***
+          password: ${PIHOLE_NAS_PASSWORD}
+        - type: monitor
+          cache: 2m
+          title: Services
+          sites:
+            - title: Immich
+              url: ${IMMICH_URL}
+              icon: si:immich
+            - title: Pi-Hole NAS
+              url: ${PIHOLE_NAS_URL}
+              icon: si:pihole
+            - title: Pi-Hole RPi
+              url: ${PIHOLE_RPI_URL}
+              icon: si:pihole
+        - type: custom-api
+          title: Immich stats
+          cache: 1d
+          url: ${IMMICH_URL}/api/server/statistics
+          headers:
+            x-api-key: ${IMMICH_API_KEY}
+            Accept: application/json
+          template: |
+            <div class="flex justify-between text-center">
+              <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
+                  <div class="size-h6">PHOTOS</div>
+              </div>
+              <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
+                  <div class="size-h6">VIDEOS</div>
+              </div>
+              <div>
+                  <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
+                  <div class="size-h6">USAGE</div>
+              </div>
+            </div>
+        # - type: server-stats
+        #   servers:
+        #     - type: local
+        #       name: Homelab
+        #       hide-mountpoints-by-default: true
+        #       mountpoints:
+        #         "/":
+        #           hide: false
+        #         "/mnt/data":
+        #           hide: false
         - type: releases
           cache: 6h
           # Without authentication the Github API allows for up to 60 requests per hour. You can create a
@@ -199,7 +196,7 @@
           # token: ...
           show-source-icon: true
           collapse-after: 3
-          limit: 20
+          limit: 10
           repositories:
             - glanceapp/glance
             - open-webui/open-webui
