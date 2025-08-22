@@ -17,16 +17,13 @@ secrets/
 *.db-wal
 *.journal
 
-# n8n runtime data
-n8n/n8n_data/
-
 # syncthing runtime data
 syncthing/index-v2/
 syncthing/syncthing-config/
 syncthing/syncthing.lock
 
-# hyperion runtime data
-hyperion/data/
+# Jupyter checkpoints
+**/.ipynb_checkpoints/
 
 # ─── Obsidian ────────────────────────────────────────────
 obsidian/config/

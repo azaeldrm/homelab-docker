@@ -29,6 +29,11 @@ glance.***REMOVED*** {
   reverse_proxy glance:8080
 }
 
+vaultwarden.***REMOVED*** {
+  tls internal
+  reverse_proxy vaultwarden:80
+}
+
 karakeep.***REMOVED*** {
   tls internal
   reverse_proxy karakeep-web-1:3000
@@ -47,4 +52,9 @@ piholenas.***REMOVED*** {
 piholerpi.***REMOVED*** {
   tls internal
   reverse_proxy ***REMOVED***
+}
+
+homeassistant.***REMOVED*** {
+  tls internal
+  reverse_proxy ***REMOVED***:8123
 }

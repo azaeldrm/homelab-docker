@@ -110,33 +110,19 @@
               description: Local LLM server
               icon: si:ollama
               hide: false
+            vaultwarden:
+              name: Vaultwarden
+              description: Password manager
+              icon: si:vaultwarden
+              hide: false
             portainer:
               hide: true
-        #     - type: rss
-        #       limit: 20
-        #       collapse-after: 4
-        #       cache: 4h
-        #       feeds:
-        #         # - url: https://www.notebookcheck.net/News.152.100.html
-        #         #   title: Notebookcheck
-        #         - url: https://selfh.st/rss/
-        #           title: selfh.st
-        #         - url: https://ciechanow.ski/atom.xml
-        #         - url: https://samwho.dev/rss.xml
-        #     - type: hacker-news
-        #       collapse-after: 4
-        #     - type: lobsters
-        #       collapse-after: 4
         - type: reddit
           cache: 2h
           subreddit: technology
           show-thumbnails: true
           collapse-after: 6
           limit: 10
-        #     - type: reddit
-        #       subreddit: selfhosted
-        #       show-thumbnails: true
-        #       collapse-after: 3
 
     - size: small
       widgets:
@@ -147,10 +133,14 @@
         - type: monitor
           cache: 2m
           title: Services
+          style: compact
           sites:
             - title: Immich
               url: ${IMMICH_URL}
               icon: si:immich
+            - title: Home Assistant
+              url: ${HOME_ASSISTANT_URL}
+              icon: si:homeassistant
             - title: Pi-Hole NAS
               url: ${PIHOLE_NAS_URL}
               icon: si:pihole
@@ -207,3 +197,4 @@
             - ollama/ollama
             - ClassicOldSong/Apollo
             - ClassicOldSong/moonlight-android
+            - microsoft/powertoys

@@ -1,22 +1,14 @@
 # coredns/Corefile
 ***REMOVED***:53 {
-	bind ***REMOVED***
+  bind ***REMOVED***
 
-	hosts {
-			***REMOVED*** obsidian.***REMOVED***
-			***REMOVED*** openwebui.***REMOVED***
-			***REMOVED*** jupyter.***REMOVED***
-			***REMOVED*** n8n.***REMOVED***
-			***REMOVED*** syncthing.***REMOVED***
-			***REMOVED*** glance.***REMOVED***
-      ***REMOVED*** karakeep.***REMOVED***
-      ***REMOVED*** immich.***REMOVED***
-      ***REMOVED*** piholenas.***REMOVED***
-      ***REMOVED*** piholerpi.***REMOVED***
-			fallthrough
-	}
+  # Wildcard resolver for *.***REMOVED***
+  template IN A {
+    match ^(.*)\.homelab\.net\.$
+    answer "{{.Name}} 60 IN A ***REMOVED***"
+  }
 
-	forward . 1.1.1.1 1.0.0.1
-	log
-	errors
+  forward . 1.1.1.1 1.0.0.1
+  log
+  errors
 }

@@ -1,0 +1,20 @@
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: unless-stopped
+    environment:
+      DOMAIN: "${VAULTWARDEN_URL}"
+      TZ: "America/New_York"
+      SIGNUPS_ALLOWED: "false"
+      INVITATIONS_ALLOWED: "false"
+      WEBSOCKET_ENABLED: "true"
+      EXTENDED_LOGGING: "true"
+    volumes:
+      - ./data/:/data/
+    networks:
+      - caddy-net
+
+networks:
+  caddy-net:
+    external: true
