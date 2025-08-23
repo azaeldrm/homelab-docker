@@ -27,7 +27,7 @@
               label: Florida
         - type: weather
           location: Washington, US
-          units: imperial # alternatively "metric"
+          units: imperial
           hour-format: 12h
           hide-location: false
         - type: markets
@@ -115,13 +115,23 @@
               description: Password manager
               icon: si:vaultwarden
               hide: false
+            matter-server:
+              name: Matter
+              description: Matter IoT server
+              icon: auto-invert sh:matter
+              hide: false
+            homeassistant:
+              name: Home Assistant
+              description: Home automation
+              icon: si:homeassistant
+              hide: false
             portainer:
               hide: true
         - type: reddit
           cache: 2h
           subreddit: technology
           show-thumbnails: true
-          collapse-after: 6
+          collapse-after: 4
           limit: 10
 
     - size: small
@@ -138,9 +148,6 @@
             - title: Immich
               url: ${IMMICH_URL}
               icon: si:immich
-            - title: Home Assistant
-              url: ${HOME_ASSISTANT_URL}
-              icon: si:homeassistant
             - title: Pi-Hole NAS
               url: ${PIHOLE_NAS_URL}
               icon: si:pihole
@@ -169,25 +176,17 @@
                   <div class="size-h6">USAGE</div>
               </div>
             </div>
-        # - type: server-stats
-        #   servers:
-        #     - type: local
-        #       name: Homelab
-        #       hide-mountpoints-by-default: true
-        #       mountpoints:
-        #         "/":
-        #           hide: false
-        #         "/mnt/data":
-        #           hide: false
         - type: releases
           cache: 6h
           # Without authentication the Github API allows for up to 60 requests per hour. You can create a
           # read-only token from your Github account settings and use it here to increase the limit.
           # token: ...
           show-source-icon: true
-          collapse-after: 3
-          limit: 10
+          collapse-after: 4
+          limit: 20
           repositories:
+            - home-assistant-libs/python-matter-server
+            - home-assistant/core
             - glanceapp/glance
             - open-webui/open-webui
             - immich-app/immich

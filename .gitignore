@@ -37,3 +37,13 @@ obsidian/**/.pki/
 # ─── Generic Data/Models Folders ─────────────────────────
 data/
 models/
+
+# ─── Home Assistant ──────────────────────────────────────
+homeassistant/config/*
+
+# --- Keep only the important YAMLs + blueprints ---
+!homeassistant/config/configuration.yaml
+!homeassistant/config/automations.yaml
+!homeassistant/config/scripts.yaml
+!homeassistant/config/scenes.yaml
+!homeassistant/config/blueprints/

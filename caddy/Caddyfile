@@ -39,6 +39,11 @@ karakeep.***REMOVED*** {
   reverse_proxy karakeep-web-1:3000
 }
 
+homeassistant.***REMOVED*** {
+  tls internal
+  reverse_proxy http://***REMOVED***:8123
+}
+
 immich.***REMOVED*** {
   tls internal
   reverse_proxy ***REMOVED***:2283
@@ -52,9 +57,4 @@ piholenas.***REMOVED*** {
 piholerpi.***REMOVED*** {
   tls internal
   reverse_proxy ***REMOVED***
-}
-
-homeassistant.***REMOVED*** {
-  tls internal
-  reverse_proxy ***REMOVED***:8123
 }
