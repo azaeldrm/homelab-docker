@@ -11,7 +11,7 @@
           shortcut: "!p"
           url: https://www.perplexity.ai/search?q={QUERY}
         - title: YouTube
-          shortcut: "!yt"
+          shortcut: "!y"
           url: https://www.youtube.com/results?search_query={QUERY}
         - title: Amazon
           shortcut: "!a"
@@ -54,6 +54,20 @@
               description: Reverse proxy
               icon: si:caddy
               hide: false
+            paperless-webserver-1:
+              id: paperless
+              name: Paperless-ngx
+              description: Document OCR manager
+              icon: si:paperlessngx
+              hide: false
+            paperless-broker-1:
+              parent: paperless
+              name: Redis
+              hide: false
+            paperless-db-1:
+              parent: paperless
+              name: Postgres
+              hide: false
             karakeep-web-1:
               id: karakeep
               name: Karakeep
@@ -62,13 +76,11 @@
               hide: false
             karakeep-meilisearch-1:
               parent: karakeep
-              name: Karakeep Meilisearch
-              icon: si:meilisearch
+              name: Meilisearch
               hide: false
             karakeep-chrome-1:
               parent: karakeep
-              name: Karakeep Chrome
-              icon: si:meilisearch
+              name: Chrome
               hide: false
             coredns:
               name: CoreDNS
@@ -138,7 +150,7 @@
       widgets:
         - type: dns-stats
           service: pihole-v6
-          url: https://piholenas.***REMOVED***
+          url: https://pihole.nas.***REMOVED***
           password: ${PIHOLE_NAS_PASSWORD}
         - type: monitor
           cache: 2m

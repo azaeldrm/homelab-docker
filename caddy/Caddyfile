@@ -39,9 +39,19 @@ karakeep.***REMOVED*** {
   reverse_proxy karakeep-web-1:3000
 }
 
+paperless.***REMOVED*** {
+  tls internal
+  reverse_proxy paperless-webserver-1:8000
+}
+
 homeassistant.***REMOVED*** {
   tls internal
   reverse_proxy http://***REMOVED***:8123
+}
+
+nas.***REMOVED*** {
+  tls internal
+  reverse_proxy ***REMOVED***:5000
 }
 
 immich.***REMOVED*** {
@@ -49,12 +59,21 @@ immich.***REMOVED*** {
   reverse_proxy ***REMOVED***:2283
 }
 
-piholenas.***REMOVED*** {
+pihole.nas.***REMOVED*** {
   tls internal
   reverse_proxy ***REMOVED***:8080
 }
 
-piholerpi.***REMOVED*** {
+pihole.rpi.***REMOVED*** {
   tls internal
   reverse_proxy ***REMOVED***
+}
+
+apollo.sp11.***REMOVED*** {
+  tls internal
+  reverse_proxy https://***REMOVED***:47990 {
+    transport http {
+      tls_insecure_skip_verify
+    }
+  }
 }

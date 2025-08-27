@@ -1,5 +1,6 @@
 # ─── Environment & Secrets ───────────────────────────────
 .env
+docker-compose.env
 secrets/
 
 # SSL/TLS certificates and private keys
@@ -17,11 +18,6 @@ secrets/
 *.db-wal
 *.journal
 
-# syncthing runtime data
-syncthing/index-v2/
-syncthing/syncthing-config/
-syncthing/syncthing.lock
-
 # Jupyter checkpoints
 **/.ipynb_checkpoints/
 
@@ -37,9 +33,13 @@ obsidian/**/.pki/
 # ─── Generic Data/Models Folders ─────────────────────────
 data/
 models/
+config/
 
-# ─── Home Assistant ──────────────────────────────────────
-homeassistant/config/*
+# ─── Paperless-ngx ───────────────────────────────────────
+paperless-ngx/consume/
+paperless-ngx/database/
+paperless-ngx/media/
+paperless-ngx/export/
 
 # --- Keep only the important YAMLs + blueprints ---
 !homeassistant/config/configuration.yaml
@@ -47,3 +47,5 @@ homeassistant/config/*
 !homeassistant/config/scripts.yaml
 !homeassistant/config/scenes.yaml
 !homeassistant/config/blueprints/
+!glance/config/glance.yml
+!glance/config/home.yml
