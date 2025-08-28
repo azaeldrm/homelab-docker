@@ -46,32 +46,32 @@ paperless.***REMOVED*** {
 
 homeassistant.***REMOVED*** {
   tls internal
-  reverse_proxy http://***REMOVED***:8123
+  reverse_proxy http://{$HOMEASSISTANT_IP}:8123
 }
 
 nas.***REMOVED*** {
   tls internal
-  reverse_proxy ***REMOVED***:5000
+  reverse_proxy {$NAS_IP}:5000
 }
 
 immich.***REMOVED*** {
   tls internal
-  reverse_proxy ***REMOVED***:2283
+  reverse_proxy {$NAS_IP}:2283
 }
 
 pihole.nas.***REMOVED*** {
   tls internal
-  reverse_proxy ***REMOVED***:8080
+  reverse_proxy {$NAS_IP}:8080
 }
 
 pihole.rpi.***REMOVED*** {
   tls internal
-  reverse_proxy ***REMOVED***
+  reverse_proxy {$RPI_TIP}
 }
 
 apollo.sp11.***REMOVED*** {
   tls internal
-  reverse_proxy https://***REMOVED***:47990 {
+  reverse_proxy https://{$SP11_IP}:47990 {
     transport http {
       tls_insecure_skip_verify
     }

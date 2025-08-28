@@ -8,7 +8,7 @@ services:
       - PGID=1000
       - TZ=America/New_York
     volumes:
-      - ./syncthing-config:/config
+      - ./config:/config
       - ../obsidian/vault:/vault
     ports:
       - 8384:8384

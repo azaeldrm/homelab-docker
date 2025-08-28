@@ -90,7 +90,7 @@
             glance:
               name: Glance
               description: Homelab dashboard
-              icon: sh:glance
+              icon: sh:glance-light
               hide: false
             open-webui:
               name: Open WebUI
@@ -130,7 +130,7 @@
             matter-server:
               name: Matter
               description: Matter IoT server
-              icon: auto-invert sh:matter
+              icon: sh:matter-light
               hide: false
             homeassistant:
               name: Home Assistant
@@ -209,3 +209,5 @@
             - ClassicOldSong/Apollo
             - ClassicOldSong/moonlight-android
             - microsoft/powertoys
+            - dani-garcia/vaultwarden
+            - paperless-ngx/paperless-ngx

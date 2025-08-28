@@ -3,11 +3,14 @@ services:
   caddy:
     image: caddy:latest
     container_name: caddy
-    env_file:
-    - ./caddy/.env
+    environment:
+      - HOMEASSISTANT_IP=${HOMEASSISTANT_IP}
+      - NAS_IP=${NAS_IP}
+      - RPI_IP=${RPI_IP}
+      - SP11_IP=${SP11_IP}
     ports:
-      - "***REMOVED***:443:443"
-      - "***REMOVED***:80:80"
+      - "${SERVER_IP}:443:443"
+      - "${SERVER_IP}:80:80"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data

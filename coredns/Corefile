@@ -1,11 +1,11 @@
 # coredns/Corefile
 ***REMOVED***:53 {
-  bind ***REMOVED***
+  bind {$COREDNS_BIND_IP}
 
   # Wildcard resolver for *.***REMOVED***
   template IN A {
     match ^(.*)\.homelab\.net\.$
-    answer "{{.Name}} 60 IN A ***REMOVED***"
+    answer "{{.Name}} 60 IN A {$COREDNS_BIND_IP}"
   }
 
   forward . 1.1.1.1 1.0.0.1
