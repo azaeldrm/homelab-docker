@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set base directory
-BASE_DIR="$HOME/***REMOVED***"
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Args: stack_dir, action (u|d|r), optional flags (e.g., p, b, pb)
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then

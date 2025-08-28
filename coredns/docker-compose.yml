@@ -8,3 +8,6 @@ services:
     command: -conf /Corefile
     network_mode: "host"
     restart: unless-stopped
+    environment:
+      - DOMAIN=${DOMAIN}
+      - COREDNS_BIND_IP=${COREDNS_BIND_IP}
