@@ -2,6 +2,9 @@
 .env
 docker-compose.env
 secrets/
+sensitive-patterns.txt
+secrets.yaml
+known_devices.yaml
 
 # SSL/TLS certificates and private keys
 *.pem

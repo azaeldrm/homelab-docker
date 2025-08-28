@@ -13,4 +13,4 @@ scene: !include scenes.yaml
 http:
   use_x_forwarded_for: true
   trusted_proxies:
-    - ***REMOVED***
+    - !secret reverse_proxy_id
