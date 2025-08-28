@@ -1,8 +1,8 @@
 # coredns/Corefile
-***REMOVED***:53 {
+{$DOMAIN}:53 {
   bind {$COREDNS_BIND_IP}
 
-  # Wildcard resolver for *.***REMOVED***
+  # Wildcard resolver for *.your.domain
   template IN A {
     match ^(.*)\.homelab\.net\.$
     answer "{{.Name}} 60 IN A {$COREDNS_BIND_IP}"

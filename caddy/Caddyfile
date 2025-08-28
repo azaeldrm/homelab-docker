@@ -1,75 +1,75 @@
 # caddy/Caddyfile
-obsidian.***REMOVED*** {
+obsidian.{$DOMAIN} {
   tls internal
   reverse_proxy obsidian:3000
 }
 
-openwebui.***REMOVED*** {
+openwebui.{$DOMAIN} {
   tls internal
   reverse_proxy open-webui:8080
 }
 
-jupyter.***REMOVED*** {
+jupyter.{$DOMAIN} {
   tls internal
   reverse_proxy jupyter-pytorch:8888
 }
 
-n8n.***REMOVED*** {
+n8n.{$DOMAIN} {
   tls internal
   reverse_proxy n8n:5678
 }
 
-syncthing.***REMOVED*** {
+syncthing.{$DOMAIN} {
   tls internal
 	reverse_proxy syncthing:8384
 }
 
-glance.***REMOVED*** {
+glance.{$DOMAIN} {
   tls internal
   reverse_proxy glance:8080
 }
 
-vaultwarden.***REMOVED*** {
+vaultwarden.{$DOMAIN} {
   tls internal
   reverse_proxy vaultwarden:80
 }
 
-karakeep.***REMOVED*** {
+karakeep.{$DOMAIN} {
   tls internal
   reverse_proxy karakeep-web-1:3000
 }
 
-paperless.***REMOVED*** {
+paperless.{$DOMAIN} {
   tls internal
   reverse_proxy paperless-webserver-1:8000
 }
 
-homeassistant.***REMOVED*** {
+homeassistant.{$DOMAIN} {
   tls internal
   reverse_proxy http://{$HOMEASSISTANT_IP}:8123
 }
 
-nas.***REMOVED*** {
+nas.{$DOMAIN} {
   tls internal
   reverse_proxy {$NAS_IP}:5000
 }
 
-immich.***REMOVED*** {
+immich.{$DOMAIN} {
   tls internal
   reverse_proxy {$NAS_IP}:2283
 }
 
-pihole.nas.***REMOVED*** {
+pihole.nas.{$DOMAIN} {
   tls internal
   reverse_proxy {$NAS_IP}:8080
 }
 
-pihole.rpi.***REMOVED*** {
+pihole.rpi.{$DOMAIN} {
   tls internal
   reverse_proxy {$RPI_TIP}
 }
 
-apollo.sp11.***REMOVED*** {
+apollo.sp11.{$DOMAIN} {
   tls internal
   reverse_proxy https://{$SP11_IP}:47990 {
     transport http {
