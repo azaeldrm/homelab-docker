@@ -20,3 +20,17 @@ This repository manages Docker Compose configurations for various services runni
 - **Syncthing**: A continuous file synchronization tool.
 - **Vaultwarden**: A lightweight, self-hosted password manager.
 
+## Environment Setup
+
+Each service requires specific environment variables to function properly.
+Follow these steps to set up your homelab:
+
+### Quick Setup
+1. Copy environment templates:
+   ```bash
+   # For each service directory, copy the .env.example to .env
+   find . -name ".env.example" -execdir cp {} .env \;
+
+2. Edit environment files:
+    - nano caddy/.env         # Network IP addresses
+    - nano coredns/.env        # Local DNS resolution
