@@ -150,7 +150,7 @@
       widgets:
         - type: dns-stats
           service: pihole-v6
-          url: https://pihole.nas.***REMOVED***
+          url: https://pihole.nas.${DOMAIN}
           password: ${PIHOLE_NAS_PASSWORD}
         - type: monitor
           cache: 2m
