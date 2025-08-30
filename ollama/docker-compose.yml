@@ -17,6 +17,8 @@ services:
       - ollama:/root/.ollama
     networks:
       - internal
+    environment:
+      - OLLAMA_CONTEXT_LENGTH=16384
 
     # Optional resource limits
     security_opt:

@@ -44,7 +44,7 @@ paperless-ngx/database/
 paperless-ngx/media/
 paperless-ngx/export/
 
-# --- Keep only the important YAMLs + blueprints ---
+# ─── Keep only the important YAMLs + blueprints ──────────
 !homeassistant/config/configuration.yaml
 !homeassistant/config/automations.yaml
 !homeassistant/config/scripts.yaml
@@ -52,3 +52,6 @@ paperless-ngx/export/
 !homeassistant/config/blueprints/
 !glance/config/glance.yml
 !glance/config/home.yml
+
+# ─── Misc ────────────────────────────────────────────────
+opencode.json
