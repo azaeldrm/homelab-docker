@@ -8,6 +8,7 @@ services:
       - NAS_IP=${NAS_IP}
       - RPI_IP=${RPI_IP}
       - SP11_IP=${SP11_IP}
+      - PC_IP=${PC_IP}
       - DOMAIN=${DOMAIN}
     ports:
       - "${SERVER_IP}:443:443"

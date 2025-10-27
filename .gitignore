@@ -25,13 +25,13 @@ known_devices.yaml
 **/.ipynb_checkpoints/
 
 # ─── Obsidian ────────────────────────────────────────────
-obsidian/config/
 **/.obsidian/
 obsidian/**/.cache/
 obsidian/**/.config/
 obsidian/**/.local/
 obsidian/**/.dbus/
 obsidian/**/.pki/
+obsidian/vault/
 
 # ─── Generic Data/Models Folders ─────────────────────────
 data/
