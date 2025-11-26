@@ -9,6 +9,7 @@ services:
       - RPI_IP=${RPI_IP}
       - SP11_IP=${SP11_IP}
       - PC_IP=${PC_IP}
+      - SERVER_IP=${SERVER_IP}
       - DOMAIN=${DOMAIN}
     ports:
       - "${SERVER_IP}:443:443"

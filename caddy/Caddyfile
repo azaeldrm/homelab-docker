@@ -86,3 +86,12 @@ apollo.pc.{$DOMAIN} {
     }
   }
 }
+
+sunshine.{$DOMAIN} {
+  tls internal
+  reverse_proxy https://{$SERVER_IP}:47990 {
+    transport http {
+      tls_insecure_skip_verify
+    }
+  }
+}
