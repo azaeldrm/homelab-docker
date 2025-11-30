@@ -44,6 +44,11 @@ paperless.{$DOMAIN} {
   reverse_proxy paperless-webserver-1:8000
 }
 
+stirlingpdf.{$DOMAIN} {
+  tls internal
+  reverse_proxy stirling-pdf:8080
+}
+
 homeassistant.{$DOMAIN} {
   tls internal
   reverse_proxy http://{$HOMEASSISTANT_IP}:8123
@@ -69,6 +74,15 @@ pihole.rpi.{$DOMAIN} {
   reverse_proxy {$RPI_IP}
 }
 
+sunshine.{$DOMAIN} {
+  tls internal
+  reverse_proxy https://{$SERVER_IP}:47990 {
+    transport http {
+      tls_insecure_skip_verify
+    }
+  }
+}
+
 apollo.sp11.{$DOMAIN} {
   tls internal
   reverse_proxy https://{$SP11_IP}:47990 {
@@ -81,15 +95,6 @@ apollo.sp11.{$DOMAIN} {
 apollo.pc.{$DOMAIN} {
   tls internal
   reverse_proxy https://{$PC_IP}:47990 {
-    transport http {
-      tls_insecure_skip_verify
-    }
-  }
-}
-
-sunshine.{$DOMAIN} {
-  tls internal
-  reverse_proxy https://{$SERVER_IP}:47990 {
     transport http {
       tls_insecure_skip_verify
     }
