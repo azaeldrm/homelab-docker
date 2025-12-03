@@ -6,17 +6,16 @@ services:
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       - NVIDIA_VISIBLE_DEVICES=0,1
+    ports:
+      - "3000:8080"
     volumes:
       - open-webui:/app/backend/data
     networks:
       - internal
-      - caddy-net
 
 volumes:
   open-webui:
 
 networks:
   internal:
-    external: true
-  caddy-net:
     external: true
