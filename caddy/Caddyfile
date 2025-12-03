@@ -49,11 +49,6 @@ stirlingpdf.{$DOMAIN} {
   reverse_proxy stirling-pdf:8080
 }
 
-homeassistant.{$DOMAIN} {
-  tls internal
-  reverse_proxy http://{$HOMEASSISTANT_IP}:8123
-}
-
 nas.{$DOMAIN} {
   tls internal
   reverse_proxy {$NAS_IP}:5000

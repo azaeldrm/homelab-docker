@@ -137,7 +137,7 @@
               description: Matter IoT server
               icon: sh:matter-light
               hide: false
-            homeassistant:
+            home-assistant:
               name: Home Assistant
               description: Home automation
               icon: si:homeassistant

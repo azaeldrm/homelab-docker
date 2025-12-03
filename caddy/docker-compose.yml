@@ -4,7 +4,6 @@ services:
     image: caddy:latest
     container_name: caddy
     environment:
-      - HOMEASSISTANT_IP=${HOMEASSISTANT_IP}
       - NAS_IP=${NAS_IP}
       - RPI_IP=${RPI_IP}
       - SP11_IP=${SP11_IP}
