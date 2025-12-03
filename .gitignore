@@ -5,6 +5,7 @@ secrets/
 sensitive-patterns.txt
 secrets.yaml
 known_devices.yaml
+*caddy-root.crt
 
 # Ignore machine-specific Docker overrides
 **/docker-compose.override.yml

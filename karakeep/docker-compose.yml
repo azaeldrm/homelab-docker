@@ -30,6 +30,8 @@ services:
       - --remote-debugging-address=0.0.0.0
       - --remote-debugging-port=9222
       - --hide-scrollbars
+    networks:
+      - internal
   meilisearch:
     image: getmeili/meilisearch:v1.13.3
     restart: unless-stopped
@@ -39,6 +41,8 @@ services:
       MEILI_NO_ANALYTICS: "true"
     volumes:
       - meilisearch:/meili_data
+    networks:
+      - internal
 
 networks:
   internal:

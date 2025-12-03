@@ -1,83 +1,85 @@
 # caddy/Caddyfile
+
+# ==== HOMELAB SERVICES ====
 obsidian.{$DOMAIN} {
   tls internal
   reverse_proxy obsidian:3000
 }
-
-openwebui.{$DOMAIN} {
-  tls internal
-  reverse_proxy open-webui:8080
-}
-
-jupyter.{$DOMAIN} {
-  tls internal
-  reverse_proxy jupyter-pytorch:8888
-}
-
-n8n.{$DOMAIN} {
-  tls internal
-  reverse_proxy n8n:5678
-}
-
 syncthing.{$DOMAIN} {
   tls internal
 	reverse_proxy syncthing:8384
 }
-
 glance.{$DOMAIN} {
   tls internal
   reverse_proxy glance:8080
 }
-
 vaultwarden.{$DOMAIN} {
   tls internal
   reverse_proxy vaultwarden:80
 }
-
 karakeep.{$DOMAIN} {
   tls internal
   reverse_proxy karakeep-web-1:3000
 }
-
 paperless.{$DOMAIN} {
   tls internal
   reverse_proxy paperless-webserver-1:8000
 }
-
 stirlingpdf.{$DOMAIN} {
   tls internal
   reverse_proxy stirling-pdf:8080
 }
 
-nas.{$DOMAIN} {
-  tls internal
-  reverse_proxy {$NAS_IP}:5000
-}
 
-immich.{$DOMAIN} {
-  tls internal
-  reverse_proxy {$NAS_IP}:2283
-}
 
-pihole.nas.{$DOMAIN} {
+# ==== HOMELAB COMPUTE SERVICES ====
+openwebui.compute.{$DOMAIN} {
   tls internal
-  reverse_proxy {$NAS_IP}:8080
+  reverse_proxy {$COMPUTE_IP}:8080
 }
-
-pihole.rpi.{$DOMAIN} {
+jupyter.compute.{$DOMAIN} {
   tls internal
-  reverse_proxy {$RPI_IP}
+  reverse_proxy {$COMPUTE_IP}:8888
 }
-
-sunshine.{$DOMAIN} {
+n8n.compute.{$DOMAIN} {
   tls internal
-  reverse_proxy https://{$SERVER_IP}:47990 {
+  reverse_proxy {$COMPUTE_IP}:5678
+}
+sunshine.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy https://{$COMPUTE_IP}:47990 {
     transport http {
       tls_insecure_skip_verify
     }
   }
 }
 
+
+# ==== HOMELAB NAS SERVICES ====
+nas.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$NAS_IP}:5000
+}
+immich.nas.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$NAS_IP}:2283
+}
+pihole.nas.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$NAS_IP}:8080
+}
+
+
+
+# ==== RASPBERRY PI SERVICES ====
+pihole.rpi.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$RPI_IP}
+}
+
+
+
+# ==== SURFACE 11 SERVICES ====
 apollo.sp11.{$DOMAIN} {
   tls internal
   reverse_proxy https://{$SP11_IP}:47990 {
@@ -87,6 +89,9 @@ apollo.sp11.{$DOMAIN} {
   }
 }
 
+
+
+# ==== PC SERVICES ====
 apollo.pc.{$DOMAIN} {
   tls internal
   reverse_proxy https://{$PC_IP}:47990 {
