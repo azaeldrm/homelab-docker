@@ -6,6 +6,9 @@ sensitive-patterns.txt
 secrets.yaml
 known_devices.yaml
 
+# Ignore machine-specific Docker overrides
+**/docker-compose.override.yml
+
 # SSL/TLS certificates and private keys
 *.pem
 *.key
