@@ -16,6 +16,8 @@ services:
             - driver: nvidia
               count: all  # Use all available GPUs
               capabilities: [gpu]
+    ports:
+      - "8888:8888"  # Expose Jupyter on all interfaces for Tailscale access
     volumes:
       - ./notebooks:/workspace  # Mounts notebook directory
     env_file:
@@ -30,9 +32,6 @@ services:
         --NotebookApp.password="${JUPYTER_PASSWORD}"
     networks:
       - default
-      - caddy-net
 
 networks:
   default:
-  caddy-net:
-    external: true
