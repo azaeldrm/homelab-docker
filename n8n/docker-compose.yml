@@ -13,6 +13,8 @@ services:
       - N8N_HOST=localhost
       - N8N_PORT=5678
       - WEBHOOK_URL=http://localhost:5678
+    ports:
+      - "5678:5678"
     volumes:
       - ./data:/home/node/.n8n
     networks:
