@@ -162,8 +162,17 @@
           title: Services
           style: compact
           sites:
+            - title: OpenWebUI
+              url: ${OPENWEBUI_COMPUTE_URL}
+              icon: sh:open-webui
+            - title: Jupyter Notebook
+              url: ${JUPYTER_COMPUTE_URL}
+              icon: si:jupyter
+            - title: n8n
+              url: ${N8N_COMPUTE_URL}
+              icon: si:n8n
             - title: Immich
-              url: ${IMMICH_URL}
+              url: ${IMMICH_NAS_URL}
               icon: si:immich
             - title: Pi-Hole NAS
               url: ${PIHOLE_NAS_URL}
@@ -174,7 +183,7 @@
         - type: custom-api
           title: Immich stats
           cache: 1d
-          url: ${IMMICH_URL}/api/server/statistics
+          url: ${IMMICH_NAS_URL}/api/server/statistics
           headers:
             x-api-key: ${IMMICH_API_KEY}
             Accept: application/json

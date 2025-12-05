@@ -76,6 +76,14 @@ pihole.rpi.{$DOMAIN} {
   tls internal
   reverse_proxy {$RPI_IP}
 }
+router.rpi.{$DOMAIN} {
+    tls internal
+    reverse_proxy http://{$ROUTER_IP} {
+        transport http {
+            dial_timeout 5s
+        }
+    }
+}
 
 
 
