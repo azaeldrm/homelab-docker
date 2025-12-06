@@ -7,6 +7,7 @@ BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
     echo "Usage: $0 <stack_dir> <u|d|r> [flags]"
     echo "  flags: p = pull images before up (whole stack), b = build (use --build)"
+    echo "  restart (r) uses down && up to apply .env changes"
     exit 1
 fi
 
@@ -66,7 +67,8 @@ elif [[ "$ACTION" == "r" ]]; then
         echo "Note: flags are ignored for restart."
     fi
     echo "Restarting stack '$STACK_DIR'..."
-    docker compose restart || exit 1
+    echo "Note: Using down && up to ensure environment variable changes are applied"
+    docker compose down && docker compose up -d || exit 1
 
 else
     echo "Bringing stack down..."
