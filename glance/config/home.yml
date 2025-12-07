@@ -46,10 +46,48 @@
     - size: full
       widgets:
         - type: docker-containers
-            title: Compute Containers
-            url: http://homelab-compute:8080/api/containers
-            running-only: false
+          title: Homelab Compute
+          sock-path: tcp://homelab-compute:2375
+          running-only: false
+          hide-by-default: false
+          containers:
+            jupyter-pytorch:
+              name: Jupyter Notebook
+              description: Computing environment
+              icon: si:jupyter
+              hide: false
+            docker-socket-proxy:
+              name: Docker Socket Proxy
+              description: Filtered Docker API proxy
+              icon: sh:haproxy-light
+              hide: false
+            kokoro-fastapi:
+              name: Kokoro-FastAPI
+              description: OpenAI‑compatible TTS server
+              icon: si:stackexchange
+              hide: false
+            n8n:
+              name: n8n
+              description: Workflow automation tool
+              icon: si:n8n
+              hide: false
+            glance:
+              name: Glance
+              description: Compute homelab dashboard
+              icon: sh:glance-light
+              hide: false
+            ollama:
+              name: Ollama
+              description: Local LLM server
+              icon: si:ollama
+              hide: false
+            open-webui:
+              name: Open WebUI
+              description: Local LLM chat WebUI
+              icon: sh:open-webui
+              hide: false
         - type: docker-containers
+          title: Homelab
           running-only: false
           hide-by-default: false
           containers:
@@ -96,21 +134,6 @@
               description: Homelab dashboard
               icon: sh:glance-light
               hide: false
-            open-webui:
-              name: Open WebUI
-              description: Local LLM chat WebUI
-              icon: sh:open-webui
-              hide: false
-            jupyter-pytorch:
-              name: Jupyter Notebook
-              description: Computing environment
-              icon: si:jupyter
-              hide: false
-            n8n:
-              name: n8n
-              description: Workflow automation tool
-              icon: si:n8n
-              hide: false
             syncthing:
               name: Syncthing
               description: File sync tool
@@ -136,18 +159,16 @@
               description: Password manager
               icon: si:vaultwarden
               hide: false
-            matter-server:
-              name: Matter
-              description: Matter IoT server
-              icon: sh:matter-light
-              hide: false
-            home-assistant:
-              name: Home Assistant
-              description: Home automation
-              icon: si:homeassistant
-              hide: false
-            portainer:
-              hide: true
+            # matter-server:
+            #   name: Matter
+            #   description: Matter IoT server
+            #   icon: sh:matter-light
+            #   hide: false
+            # home-assistant:
+            #   name: Home Assistant
+            #   description: Home automation
+            #   icon: si:homeassistant
+            #   hide: false
         - type: reddit
           cache: 2h
           subreddit: technology

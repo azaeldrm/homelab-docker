@@ -42,9 +42,6 @@ data/
 models/
 config/
 
-# ─── Glance ───────────────────────────────────────────────
-glance/config/glance.yml
-
 # ─── Paperless-ngx ───────────────────────────────────────
 paperless-ngx/consume/
 paperless-ngx/database/
@@ -57,7 +54,8 @@ paperless-ngx/export/
 !homeassistant/config/scripts.yaml
 !homeassistant/config/scenes.yaml
 !homeassistant/config/blueprints/
-!glance/config/
+!glance/config/glance.yml
+!glance/config/home.yml
 
 # ─── Misc ────────────────────────────────────────────────
 opencode.json
