@@ -1,0 +1,15 @@
+services:
+  docker-proxy:
+    image: tecnativa/docker-socket-proxy
+    container_name: docker-socket-proxy
+    restart: unless-stopped
+    ports:
+      - "${COMPUTE_IP}:2375:2375"          # exposed on the host → reachable via Tailscale IP:2375
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      LOG_LEVEL: info
+      # Only what Glance needs; CONTAINERS and INFO are usually enough
+      CONTAINERS: 1
+      INFO: 1
+      # everything else implicitly 0 (disabled)
