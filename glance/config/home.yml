@@ -46,6 +46,10 @@
     - size: full
       widgets:
         - type: docker-containers
+            title: Compute Containers
+            url: http://homelab-compute:8080/api/containers
+            running-only: false
+        - type: docker-containers
           running-only: false
           hide-by-default: false
           containers:

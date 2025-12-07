@@ -42,6 +42,9 @@ data/
 models/
 config/
 
+# ─── Glance ───────────────────────────────────────────────
+glance/config/glance.yml
+
 # ─── Paperless-ngx ───────────────────────────────────────
 paperless-ngx/consume/
 paperless-ngx/database/

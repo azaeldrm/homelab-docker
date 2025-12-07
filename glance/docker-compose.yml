@@ -14,12 +14,6 @@ services:
     env_file: .env
     networks:
       - caddy-net
-    entrypoint: >
-      sh -c "if [ -f /usr/local/share/ca-certificates/homelab-caddy-root.crt ]; then
-                grep -qxF \"$(cat /usr/local/share/ca-certificates/homelab-caddy-root.crt)\" /etc/ssl/certs/ca-certificates.crt || \
-                cat /usr/local/share/ca-certificates/homelab-caddy-root.crt >> /etc/ssl/certs/ca-certificates.crt;
-              fi;
-              exec \"$0\" \"$@\""
     command: ["/app/glance", "--config", "/app/config/glance.yml"]
 
 networks:
