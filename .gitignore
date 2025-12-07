@@ -54,8 +54,7 @@ paperless-ngx/export/
 !homeassistant/config/scripts.yaml
 !homeassistant/config/scenes.yaml
 !homeassistant/config/blueprints/
-!glance/config/glance.yml
-!glance/config/home.yml
+!glance/config/
 
 # ─── Misc ────────────────────────────────────────────────
 opencode.json

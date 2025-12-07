@@ -1,0 +1,12 @@
+extends: glance.base.yml
+
+pages:
+  - name: Compute
+    hide-desktop-navigation: true
+
+    columns:
+      - size: full
+        widgets:
+          - type: docker-containers
+            running-only: false
+            hide-by-default: false
