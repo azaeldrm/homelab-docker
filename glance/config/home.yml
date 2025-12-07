@@ -187,15 +187,6 @@
           title: Services
           style: compact
           sites:
-            - title: OpenWebUI
-              url: ${OPENWEBUI_COMPUTE_URL}
-              icon: sh:open-webui
-            - title: Jupyter Notebook
-              url: ${JUPYTER_COMPUTE_URL}
-              icon: si:jupyter
-            - title: n8n
-              url: ${N8N_COMPUTE_URL}
-              icon: si:n8n
             - title: Immich
               url: ${IMMICH_NAS_URL}
               icon: si:immich
