@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    restart: unless-stopped
+    network_mode: bridge
+    environment:
+      - TZ=America/New_York            # Change your timezone
+    volumes:
+      - ./config:/config               # Jellyfin config & metadata
+      - ./cache:/cache                 # Cache (thumbnails, transcodes, etc.)
+
+      # Media from your NAS (mounted on the host)
+      - /mnt/media/music:/media/music
+      - /mnt/media/audiobooks:/media/audiobooks
+      - /mnt/media/podcasts:/media/podcasts
+      - /mnt/media/youtube:/media/youtube
+      - /mnt/media/tv:/media/tv
+
+    # 🔥 Intel QuickSync Hardware Acceleration
+    devices:
+      - /dev/dri:/dev/dri              # Required for QuickSync GPU access
+
+    # Optional but recommended for stability
+    ports:
+      - 8096:8096                      # HTTP
+      - 8920:8920                      # HTTPS (if enabled)
