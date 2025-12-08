@@ -13,6 +13,10 @@ glance.{$DOMAIN} {
   tls internal
   reverse_proxy glance:8080
 }
+bentopdf.{$DOMAIN} {
+  tls internal
+  reverse_proxy bentopdf:8080
+}
 vaultwarden.{$DOMAIN} {
   tls internal
   reverse_proxy vaultwarden:80
@@ -25,13 +29,6 @@ paperless.{$DOMAIN} {
   tls internal
   reverse_proxy paperless-webserver-1:8000
 }
-stirlingpdf.{$DOMAIN} {
-  tls internal
-  reverse_proxy stirling-pdf:8080
-}
-
-
-
 # ==== HOMELAB COMPUTE SERVICES ====
 openwebui.compute.{$DOMAIN} {
   tls internal

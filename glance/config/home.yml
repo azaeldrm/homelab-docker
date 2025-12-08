@@ -144,15 +144,15 @@
               description: KB note-taking app
               icon: si:obsidian
               hide: false
-            stirling-pdf:
-              name: StirlingPDF
-              description: PDF manipulation tool
-              icon: sh:stirling-pdf-light
-              hide: false
             ollama:
               name: Ollama
               description: Local LLM server
               icon: si:ollama
+              hide: false
+            bentopdf:
+              name: BentoPDF
+              description: PDF conversion service
+              icon: sh:bentopdf-light
               hide: false
             vaultwarden:
               name: Vaultwarden
