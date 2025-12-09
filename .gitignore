@@ -57,5 +57,8 @@ paperless-ngx/export/
 !glance/config/glance.yml
 !glance/config/home.yml
 
+# ─── Jellyfin ─────────────────────────────────────────────
+jellyfin/cache/
+
 # ─── Misc ────────────────────────────────────────────────
 opencode.json
