@@ -86,6 +86,11 @@
               description: Local LLM chat WebUI
               icon: sh:open-webui
               hide: false
+            jellyfin:
+              name: Jellyfin
+              description: Media server
+              icon: si:jellyfin
+              hide: false
         - type: docker-containers
           title: Homelab
           running-only: false

@@ -50,6 +50,10 @@ sunshine.compute.{$DOMAIN} {
     }
   }
 }
+jellyfin.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:8096
+}
 
 
 # ==== HOMELAB NAS SERVICES ====
