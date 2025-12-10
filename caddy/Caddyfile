@@ -54,6 +54,26 @@ jellyfin.compute.{$DOMAIN} {
   tls internal
   reverse_proxy {$COMPUTE_IP}:8096
 }
+qbit.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:8099
+}
+prowlarr.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:9696
+}
+radarr.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:7878
+}
+sonarr.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:8989
+}
+lidarr.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:8686
+}
 
 
 # ==== HOMELAB NAS SERVICES ====
