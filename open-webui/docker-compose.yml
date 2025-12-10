@@ -11,11 +11,11 @@ services:
     volumes:
       - open-webui:/app/backend/data
     networks:
-      - internal
+      - ollama-net
 
 volumes:
   open-webui:
 
 networks:
-  internal:
+  ollama-net:
     external: true

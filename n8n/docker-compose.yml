@@ -18,11 +18,8 @@ services:
     volumes:
       - ./data:/home/node/.n8n
     networks:
-      - internal
-      - caddy-net
+      - ollama-net
 
 networks:
-  internal:
-    external: true
-  caddy-net:
+  ollama-net:
     external: true

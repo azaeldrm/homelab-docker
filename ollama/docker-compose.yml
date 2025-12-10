@@ -9,7 +9,7 @@ services:
     volumes:
       - ollama:/root/.ollama
     networks:
-      - internal
+      - ollama-net
     environment:
       - OLLAMA_CONTEXT_LENGTH=16384
 
@@ -17,5 +17,5 @@ volumes:
   ollama:
 
 networks:
-  internal:
+  ollama-net:
     external: true

@@ -1,5 +1,5 @@
 services:
-  kokoro:
+  kokoro-fastapi:
     image: ghcr.io/remsky/kokoro-fastapi-gpu:latest
     container_name: kokoro-fastapi
     restart: unless-stopped
@@ -13,8 +13,8 @@ services:
               count: all
               capabilities: [gpu]
     networks:
-      - internal
+      - ollama-net
 
 networks:
-  internal:
+  ollama-net:
     external: true

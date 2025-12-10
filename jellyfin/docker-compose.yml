@@ -5,14 +5,23 @@ services:
     restart: unless-stopped
     environment:
       - TZ=America/New_York
+      - PUID=1000
+      - PGID=1000
+    ports:
+      - 8096:8096
     volumes:
       - ./config:/config
       - ./cache:/cache
       - /mnt/media:/media
+    networks:
+      - media-net
+
+networks:
+  media-net:
+    external: true
 
     # 🔥 Intel QuickSync Hardware Acceleration
     # devices:
     #   - /dev/dri:/dev/dri              # Required for QuickSync GPU access
 
-    ports:
-      - 8096:8096
+
