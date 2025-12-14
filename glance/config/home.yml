@@ -118,6 +118,16 @@
               description: Password manager
               icon: si:vaultwarden
               hide: false
+            beszel-hub:
+              name: Docker Hub
+              description: System monitoring hub
+              icon: sh:beszel-light
+              hide: false
+            beszel-agent:
+              name: Docker Agent
+              description: System monitoring agent
+              icon: sh:agent-zero-light
+              hide: false
         - type: docker-containers
           title: Homelab Compute
           sock-path: tcp://${COMPUTE_IP}:2375
@@ -158,6 +168,11 @@
               name: Docker Socket Proxy
               description: Filtered Docker API proxy
               icon: sh:haproxy-light
+              hide: false
+            beszel-agent:
+              name: Docker Agent
+              description: System monitoring agent
+              icon: sh:agent-zero-light
               hide: false
         - type: docker-containers
           title: Homelab Media
@@ -204,6 +219,11 @@
               name: Gluetun
               description: Container VPN client
               icon: si:openvpn
+              hide: false
+            beszel-agent:
+              name: Docker Agent
+              description: System monitoring agent
+              icon: sh:agent-zero-light
               hide: false
 
     - size: small

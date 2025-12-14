@@ -29,6 +29,10 @@ paperless.{$DOMAIN} {
   tls internal
   reverse_proxy paperless-webserver-1:8000
 }
+beszel.{$DOMAIN} {
+  tls internal
+  reverse_proxy beszel-hub:8090
+}
 
 
 # ==== HOMELAB COMPUTE SERVICES ====
