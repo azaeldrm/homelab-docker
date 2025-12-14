@@ -118,16 +118,6 @@
               description: Password manager
               icon: si:vaultwarden
               hide: false
-            # matter-server:
-            #   name: Matter
-            #   description: Matter IoT server
-            #   icon: sh:matter-light
-            #   hide: false
-            # home-assistant:
-            #   name: Home Assistant
-            #   description: Home automation
-            #   icon: si:homeassistant
-            #   hide: false
         - type: docker-containers
           title: Homelab Compute
           sock-path: tcp://${COMPUTE_IP}:2375
@@ -138,16 +128,6 @@
               name: Jupyter Notebook
               description: Computing environment
               icon: si:jupyter
-              hide: false
-            docker-socket-proxy:
-              name: Docker Socket Proxy
-              description: Filtered Docker API proxy
-              icon: sh:haproxy-light
-              hide: false
-            gluetun:
-              name: Gluetun
-              description: Container VPN client
-              icon: si:openvpn
               hide: false
             kokoro-fastapi:
               name: Kokoro-FastAPI
@@ -174,6 +154,17 @@
               description: Local LLM chat WebUI
               icon: sh:open-webui
               hide: false
+            docker-socket-proxy:
+              name: Docker Socket Proxy
+              description: Filtered Docker API proxy
+              icon: sh:haproxy-light
+              hide: false
+        - type: docker-containers
+          title: Homelab Media
+          sock-path: tcp://${MEDIA_IP}:2375
+          running-only: false
+          hide-by-default: false
+          containers:
             jellyfin:
               name: Jellyfin
               description: Media server
@@ -204,27 +195,31 @@
               description: BitTorrent client
               icon: sh:qbittorrent-light
               hide: false
-        - type: reddit
-          cache: 2h
-          subreddit: technology
-          show-thumbnails: true
-          collapse-after: 4
-          limit: 10
+            docker-socket-proxy:
+              name: Docker Socket Proxy
+              description: Filtered Docker API proxy
+              icon: sh:haproxy-light
+              hide: false
+            gluetun:
+              name: Gluetun
+              description: Container VPN client
+              icon: si:openvpn
+              hide: false
 
     - size: small
       widgets:
-        - type: dns-stats
-          service: pihole-v6
-          url: https://pihole.nas.${DOMAIN}
-          password: ${PIHOLE_NAS_PASSWORD}
-        - type: monitor
-          cache: 2m
-          title: Services
-          style: compact
-          sites:
-            - title: Immich
-              url: ${IMMICH_NAS_URL}
-              icon: si:immich
+        # - type: dns-stats
+        #   service: pihole-v6
+        #   url: https://pihole.nas.${DOMAIN}
+        #   password: ${PIHOLE_NAS_PASSWORD}
+        # - type: monitor
+        #   cache: 2m
+        #   title: Services
+        #   style: compact
+        #   sites:
+        #     - title: Immich
+        #       url: ${IMMICH_NAS_URL}
+        #       icon: si:immich
         - type: custom-api
           title: Immich stats
           cache: 1d
@@ -247,14 +242,20 @@
                   <div class="size-h6">USAGE</div>
               </div>
             </div>
+        - type: reddit
+          cache: 2h
+          subreddit: technology
+          show-thumbnails: true
+          collapse-after: 2
+          limit: 8
         - type: releases
           cache: 6h
           # Without authentication the Github API allows for up to 60 requests per hour. You can create a
           # read-only token from your Github account settings and use it here to increase the limit.
           # token: ...
           show-source-icon: true
-          collapse-after: 4
-          limit: 20
+          collapse-after: 3
+          limit: 18
           repositories:
             - Tecnativa/docker-socket-proxy
             - alam00000/bentopdf
