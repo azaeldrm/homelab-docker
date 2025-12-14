@@ -144,6 +144,11 @@
               description: Filtered Docker API proxy
               icon: sh:haproxy-light
               hide: false
+            gluetun:
+              name: Gluetun
+              description: Container VPN client
+              icon: si:openvpn
+              hide: false
             kokoro-fastapi:
               name: Kokoro-FastAPI
               description: OpenAI‑compatible TTS server
@@ -220,12 +225,6 @@
             - title: Immich
               url: ${IMMICH_NAS_URL}
               icon: si:immich
-            - title: Pi-Hole NAS
-              url: ${PIHOLE_NAS_URL}
-              icon: si:pihole
-            - title: Pi-Hole RPi
-              url: ${PIHOLE_RPI_URL}
-              icon: si:pihole
         - type: custom-api
           title: Immich stats
           cache: 1d

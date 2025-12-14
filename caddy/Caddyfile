@@ -29,6 +29,8 @@ paperless.{$DOMAIN} {
   tls internal
   reverse_proxy paperless-webserver-1:8000
 }
+
+
 # ==== HOMELAB COMPUTE SERVICES ====
 openwebui.compute.{$DOMAIN} {
   tls internal
@@ -42,37 +44,32 @@ n8n.compute.{$DOMAIN} {
   tls internal
   reverse_proxy {$COMPUTE_IP}:5678
 }
-sunshine.compute.{$DOMAIN} {
+
+
+# ==== MEDIA SERVICES ====
+jellyfin.media.{$DOMAIN} {
   tls internal
-  reverse_proxy https://{$COMPUTE_IP}:47990 {
-    transport http {
-      tls_insecure_skip_verify
-    }
-  }
+  reverse_proxy {$MEDIA_IP}:8096
 }
-jellyfin.compute.{$DOMAIN} {
+qbit.media.{$DOMAIN} {
   tls internal
-  reverse_proxy {$COMPUTE_IP}:8096
+  reverse_proxy {$MEDIA_IP}:8099
 }
-qbit.compute.{$DOMAIN} {
+prowlarr.media.{$DOMAIN} {
   tls internal
-  reverse_proxy {$COMPUTE_IP}:8099
+  reverse_proxy {$MEDIA_IP}:9696
 }
-prowlarr.compute.{$DOMAIN} {
+radarr.media.{$DOMAIN} {
   tls internal
-  reverse_proxy {$COMPUTE_IP}:9696
+  reverse_proxy {$MEDIA_IP}:7878
 }
-radarr.compute.{$DOMAIN} {
+sonarr.media.{$DOMAIN} {
   tls internal
-  reverse_proxy {$COMPUTE_IP}:7878
+  reverse_proxy {$MEDIA_IP}:8989
 }
-sonarr.compute.{$DOMAIN} {
+lidarr.media.{$DOMAIN} {
   tls internal
-  reverse_proxy {$COMPUTE_IP}:8989
-}
-lidarr.compute.{$DOMAIN} {
-  tls internal
-  reverse_proxy {$COMPUTE_IP}:8686
+  reverse_proxy {$MEDIA_IP}:8686
 }
 
 
@@ -88,22 +85,6 @@ immich.nas.{$DOMAIN} {
 pihole.nas.{$DOMAIN} {
   tls internal
   reverse_proxy {$NAS_IP}:8080
-}
-
-
-
-# ==== RASPBERRY PI SERVICES ====
-pihole.rpi.{$DOMAIN} {
-  tls internal
-  reverse_proxy {$RPI_IP}
-}
-router.rpi.{$DOMAIN} {
-    tls internal
-    reverse_proxy http://{$ROUTER_IP} {
-        transport http {
-            dial_timeout 5s
-        }
-    }
 }
 
 
