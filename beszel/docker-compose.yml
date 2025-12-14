@@ -1,0 +1,13 @@
+services:
+  beszel:
+    image: henrygd/beszel:latest
+    restart: unless-stopped
+
+    environment:
+      BESZEL_SECRET: ${BESZEL_SECRET}
+
+    volumes:
+      - /:/host:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    pid: host
