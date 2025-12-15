@@ -1,0 +1,56 @@
+- name: Home
+  # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
+  hide-desktop-navigation: false
+  head-widgets:
+    - type: search
+      search-engine: google
+      autofocus: true
+      # Optional: Add more search engines to the dropdown
+      bangs:
+        - title: Perplexity
+          shortcut: "!p"
+          url: https://www.perplexity.ai/search?q={QUERY}
+        - title: YouTube
+          shortcut: "!y"
+          url: https://www.youtube.com/results?search_query={QUERY}
+        - title: Amazon
+          shortcut: "!a"
+          url: https://www.amazon.com/s?k={QUERY}
+
+  columns:
+    - size: small
+      widgets:
+        - type: clock
+          hour-format: 12h
+          timezones:
+            - timezone: America/New_York
+              label: Florida
+        - type: weather
+          location: Washington, US
+          units: imperial
+          hour-format: 12h
+          hide-location: false
+        - type: markets
+          markets:
+            - symbol: TQQQ
+              name: TQQQ
+            - symbol: RENDER-USD
+              name: Render Tkn
+            - symbol: TURBO-USD
+              name: Turbo Tkn
+            - symbol: BTC-USD
+              name: Bitcoin
+            - symbol: ETH-USD
+              name: Ethereum
+
+    - size: full
+      widgets:
+        - type: reddit
+          cache: 2h
+          subreddit: technology
+          show-thumbnails: true
+          # collapse-after: 4
+          limit: 8
+
+    - size: small
+      widgets: []

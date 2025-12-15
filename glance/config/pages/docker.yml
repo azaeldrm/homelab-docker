@@ -1,47 +1,36 @@
-- name: Home
-  # Optionally, if you only have a single page you can hide the desktop navigation for a cleaner look
-  hide-desktop-navigation: true
-  head-widgets:
-    - type: search
-      search-engine: google
-      autofocus: true
-      # Optional: Add more search engines to the dropdown
-      bangs:
-        - title: Perplexity
-          shortcut: "!p"
-          url: https://www.perplexity.ai/search?q={QUERY}
-        - title: YouTube
-          shortcut: "!y"
-          url: https://www.youtube.com/results?search_query={QUERY}
-        - title: Amazon
-          shortcut: "!a"
-          url: https://www.amazon.com/s?k={QUERY}
-
+- name: Docker
+  hide-desktop-navigation: false
   columns:
     - size: small
       widgets:
-        - type: clock
-          hour-format: 12h
-          timezones:
-            - timezone: America/New_York
-              label: Florida
-        - type: weather
-          location: Washington, US
-          units: imperial
-          hour-format: 12h
-          hide-location: false
-        - type: markets
-          markets:
-            - symbol: TQQQ
-              name: TQQQ
-            - symbol: RENDER-USD
-              name: Render Tkn
-            - symbol: TURBO-USD
-              name: Turbo Tkn
-            - symbol: BTC-USD
-              name: Bitcoin
-            - symbol: ETH-USD
-              name: Ethereum
+      - $include: ../widgets/beszel-stats.yml
+      - type: releases
+        cache: 6h
+        show-source-icon: true
+        collapse-after: 3
+        limit: 20
+        repositories:
+          - Tecnativa/docker-socket-proxy
+          - alam00000/bentopdf
+          - remsky/Kokoro-FastAPI
+          - jellyfin/jellyfin
+          - home-assistant-libs/python-matter-server
+          - home-assistant/core
+          - glanceapp/glance
+          - open-webui/open-webui
+          - immich-app/immich
+          - syncthing/syncthing
+          - n8n-io/n8n
+          - pi-hole/pi-hole
+          - ollama/ollama
+          - ClassicOldSong/Apollo
+          - ClassicOldSong/moonlight-android
+          - microsoft/powertoys
+          - dani-garcia/vaultwarden
+          - paperless-ngx/paperless-ngx
+          - karakeep-app/karakeep
+          - sst/opencode
+          - eoyilmaz/displaycal-py3
 
     - size: full
       widgets:
@@ -119,12 +108,12 @@
               icon: si:vaultwarden
               hide: false
             beszel-hub:
-              name: Docker Hub
+              name: Beszel Hub
               description: System monitoring hub
               icon: sh:beszel-light
               hide: false
             beszel-agent:
-              name: Docker Agent
+              name: Beszel Agent
               description: System monitoring agent
               icon: sh:agent-zero-light
               hide: false
@@ -170,7 +159,7 @@
               icon: sh:haproxy-light
               hide: false
             beszel-agent:
-              name: Docker Agent
+              name: Beszel Agent
               description: System monitoring agent
               icon: sh:agent-zero-light
               hide: false
@@ -221,78 +210,15 @@
               icon: si:openvpn
               hide: false
             beszel-agent:
-              name: Docker Agent
+              name: Beszel Agent
               description: System monitoring agent
               icon: sh:agent-zero-light
               hide: false
 
     - size: small
       widgets:
-        # - type: dns-stats
-        #   service: pihole-v6
-        #   url: https://pihole.nas.${DOMAIN}
-        #   password: ${PIHOLE_NAS_PASSWORD}
-        # - type: monitor
-        #   cache: 2m
-        #   title: Services
-        #   style: compact
-        #   sites:
-        #     - title: Immich
-        #       url: ${IMMICH_NAS_URL}
-        #       icon: si:immich
-        - type: custom-api
-          title: Immich stats
-          cache: 1d
-          url: ${IMMICH_NAS_URL}/api/server/statistics
-          headers:
-            x-api-key: ${IMMICH_API_KEY}
-            Accept: application/json
-          template: |
-            <div class="flex justify-between text-center">
-              <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
-                  <div class="size-h6">PHOTOS</div>
-              </div>
-              <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
-                  <div class="size-h6">VIDEOS</div>
-              </div>
-              <div>
-                  <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
-                  <div class="size-h6">USAGE</div>
-              </div>
-            </div>
-        - type: reddit
-          cache: 2h
-          subreddit: technology
-          show-thumbnails: true
-          collapse-after: 2
-          limit: 8
-        - type: releases
-          cache: 6h
-          # Without authentication the Github API allows for up to 60 requests per hour. You can create a
-          # read-only token from your Github account settings and use it here to increase the limit.
-          # token: ...
-          show-source-icon: true
-          collapse-after: 3
-          limit: 18
-          repositories:
-            - Tecnativa/docker-socket-proxy
-            - alam00000/bentopdf
-            - remsky/Kokoro-FastAPI
-            - jellyfin/jellyfin
-            - home-assistant-libs/python-matter-server
-            - home-assistant/core
-            - glanceapp/glance
-            - open-webui/open-webui
-            - immich-app/immich
-            - syncthing/syncthing
-            - n8n-io/n8n
-            - pi-hole/pi-hole
-            - ollama/ollama
-            - ClassicOldSong/Apollo
-            - ClassicOldSong/moonlight-android
-            - microsoft/powertoys
-            - dani-garcia/vaultwarden
-            - paperless-ngx/paperless-ngx
-            - karakeep-app/karakeep
+      - $include: ../widgets/immich-stats.yml
+      - $include: ../widgets/jellyfin-stats.yml
+      # - $include: ../widgets/gluetun-stats.yml
+      - $include: ../widgets/karakeep-stats.yml
+      - $include: ../widgets/tailscale-stats.yml
