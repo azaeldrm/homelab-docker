@@ -4,11 +4,13 @@
   options:
     base-url: ${BESZEL_URL}
     api-key: ${BESZEL_TOKEN}
+    redirect-url: ${BESZEL_REDIR_URL}
 
   template: |
     {{/* Required config options */}}
     {{ $baseURL := .Options.StringOr "base-url" "" }}
     {{ $apiKey := .Options.StringOr "api-key" "" }}
+    {{ $redirect := .Options.StringOr "redirect-url" "" }}
 
     {{/* Error message template */}}
     {{ define "errorMsg" }}
@@ -105,7 +107,9 @@
                 {{ else }}
                   <span class="status-dot color-negative">●</span>
                 {{ end }}
-                {{ $hostname }}
+                <a href="{{ printf "%s/system/%s" $redirect $hostname }}" target="_blank" rel="noopener">
+                  {{ $hostname }}
+                </a>
               </div>
               <div>
                 {{ if eq $status "up" }}
