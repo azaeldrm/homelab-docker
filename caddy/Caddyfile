@@ -75,6 +75,10 @@ lidarr.media.{$DOMAIN} {
   tls internal
   reverse_proxy {$MEDIA_IP}:8686
 }
+cleanuparr.media.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$MEDIA_IP}:11011
+}
 
 
 # ==== HOMELAB NAS SERVICES ====

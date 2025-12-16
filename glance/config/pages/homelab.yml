@@ -1,4 +1,4 @@
-- name: Docker
+- name: Homelab
   hide-desktop-navigation: false
   columns:
     - size: small
@@ -13,8 +13,14 @@
           - Tecnativa/docker-socket-proxy
           - alam00000/bentopdf
           - remsky/Kokoro-FastAPI
+          - tailscale/tailscale
           - jellyfin/jellyfin
-          - home-assistant-libs/python-matter-server
+          - Sonarr/Sonarr
+          - Radarr/Radarr
+          - Lidarr/Lidarr
+          - Prowlarr/Prowlarr
+          - Cleanuparr/Cleanuparr
+          - qbittorrent/qBittorrent
           - home-assistant/core
           - glanceapp/glance
           - open-webui/open-webui
@@ -208,6 +214,11 @@
               name: Gluetun
               description: Container VPN client
               icon: si:openvpn
+              hide: false
+            cleanuparr:
+              name: Cleanuparr
+              description: Media cleanup tool
+              icon: sh:relaticle-light
               hide: false
             beszel-agent:
               name: Beszel Agent
