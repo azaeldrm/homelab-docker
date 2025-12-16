@@ -6,7 +6,7 @@ services:
     networks:
       - media-net
     ports:
-      - 9696:9696
+      - ${MEDIA_IP}:9696:9696
     environment:
       - TZ=America/New_York
       - PUID=1000
@@ -21,7 +21,7 @@ services:
     networks:
       - media-net
     ports:
-      - 7878:7878
+      - ${MEDIA_IP}:7878:7878
     environment:
       - TZ=America/New_York
       - PUID=1000
@@ -38,7 +38,7 @@ services:
     networks:
       - media-net
     ports:
-      - 8989:8989
+      - ${MEDIA_IP}:8989:8989
     environment:
       - TZ=America/New_York
       - PUID=1000
@@ -55,7 +55,7 @@ services:
     networks:
       - media-net
     ports:
-      - 8686:8686
+      - ${MEDIA_IP}:8686:8686
     environment:
       - TZ=America/New_York
       - PUID=1000
@@ -63,6 +63,22 @@ services:
     volumes:
       - ./config/lidarr:/config
       - /mnt/media/music:/music
+      - /mnt/downloads:/downloads
+    restart: unless-stopped
+
+  cleanuparr:
+    image: ghcr.io/cleanuparr/cleanuparr:latest
+    container_name: cleanuparr
+    networks:
+      - media-net
+    ports:
+      - ${MEDIA_IP}:8787:8787
+    environment:
+      - TZ=America/New_York
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./config:/config
       - /mnt/downloads:/downloads
     restart: unless-stopped
 
