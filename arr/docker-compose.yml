@@ -72,7 +72,7 @@ services:
     networks:
       - media-net
     ports:
-      - ${MEDIA_IP}:8787:8787
+      - ${MEDIA_IP}:11011:11011
     environment:
       - TZ=America/New_York
       - PUID=1000
