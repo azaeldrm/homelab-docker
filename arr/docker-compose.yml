@@ -78,7 +78,7 @@ services:
       - PUID=1000
       - PGID=1000
     volumes:
-      - ./config:/config
+      - ./config/cleanuparr:/config
       - /mnt/downloads:/downloads
     restart: unless-stopped
 
