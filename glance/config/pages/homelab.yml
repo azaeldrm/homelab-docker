@@ -124,52 +124,6 @@
               icon: sh:agent-zero-light
               hide: false
         - type: docker-containers
-          title: Homelab Compute
-          sock-path: tcp://${COMPUTE_IP}:2375
-          running-only: false
-          hide-by-default: false
-          containers:
-            jupyter-pytorch:
-              name: Jupyter Notebook
-              description: Computing environment
-              icon: si:jupyter
-              hide: false
-            kokoro-fastapi:
-              name: Kokoro-FastAPI
-              description: OpenAI‑compatible TTS server
-              icon: si:stackexchange
-              hide: false
-            n8n:
-              name: n8n
-              description: Workflow automation tool
-              icon: si:n8n
-              hide: false
-            glance:
-              name: Glance
-              description: Compute homelab dashboard
-              icon: sh:glance-light
-              hide: false
-            ollama:
-              name: Ollama
-              description: Local LLM server
-              icon: si:ollama
-              hide: false
-            open-webui:
-              name: Open WebUI
-              description: Local LLM chat WebUI
-              icon: sh:open-webui
-              hide: false
-            docker-socket-proxy:
-              name: Docker Socket Proxy
-              description: Filtered Docker API proxy
-              icon: sh:haproxy-light
-              hide: false
-            beszel-agent:
-              name: Beszel Agent
-              description: System monitoring agent
-              icon: sh:agent-zero-light
-              hide: false
-        - type: docker-containers
           title: Homelab Media
           sock-path: tcp://${MEDIA_IP}:2375
           running-only: false
@@ -179,6 +133,11 @@
               name: Jellyfin
               description: Media server
               icon: si:jellyfin
+              hide: false
+            bazarr:
+              name: Bazarr
+              description: Media subtitle manager
+              icon: sh:bazarr-light
               hide: false
             lidarr:
               name: Lidarr
@@ -219,6 +178,52 @@
               name: Cleanuparr
               description: Media cleanup tool
               icon: sh:relaticle-light
+              hide: false
+            beszel-agent:
+              name: Beszel Agent
+              description: System monitoring agent
+              icon: sh:agent-zero-light
+              hide: false
+        - type: docker-containers
+          title: Homelab Compute
+          sock-path: tcp://${COMPUTE_IP}:2375
+          running-only: false
+          hide-by-default: false
+          containers:
+            jupyter-pytorch:
+              name: Jupyter Notebook
+              description: Computing environment
+              icon: si:jupyter
+              hide: false
+            kokoro-fastapi:
+              name: Kokoro-FastAPI
+              description: OpenAI‑compatible TTS server
+              icon: si:stackexchange
+              hide: false
+            n8n:
+              name: n8n
+              description: Workflow automation tool
+              icon: si:n8n
+              hide: false
+            glance:
+              name: Glance
+              description: Compute homelab dashboard
+              icon: sh:glance-light
+              hide: false
+            ollama:
+              name: Ollama
+              description: Local LLM server
+              icon: si:ollama
+              hide: false
+            open-webui:
+              name: Open WebUI
+              description: Local LLM chat WebUI
+              icon: sh:open-webui
+              hide: false
+            docker-socket-proxy:
+              name: Docker Socket Proxy
+              description: Filtered Docker API proxy
+              icon: sh:haproxy-light
               hide: false
             beszel-agent:
               name: Beszel Agent

@@ -79,6 +79,10 @@ cleanuparr.media.{$DOMAIN} {
   tls internal
   reverse_proxy {$MEDIA_IP}:11011
 }
+bazarr.media.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$MEDIA_IP}:6767
+}
 
 
 # ==== HOMELAB NAS SERVICES ====
