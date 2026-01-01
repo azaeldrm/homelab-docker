@@ -4,39 +4,7 @@
     - size: small
       widgets:
       - $include: ../widgets/beszel-stats.yml
-      - type: releases
-        cache: 6h
-        show-source-icon: true
-        collapse-after: 3
-        limit: 20
-        repositories:
-          - Tecnativa/docker-socket-proxy
-          - alam00000/bentopdf
-          - remsky/Kokoro-FastAPI
-          - tailscale/tailscale
-          - jellyfin/jellyfin
-          - Sonarr/Sonarr
-          - Radarr/Radarr
-          - Lidarr/Lidarr
-          - Prowlarr/Prowlarr
-          - Cleanuparr/Cleanuparr
-          - qbittorrent/qBittorrent
-          - home-assistant/core
-          - glanceapp/glance
-          - open-webui/open-webui
-          - immich-app/immich
-          - syncthing/syncthing
-          - n8n-io/n8n
-          - pi-hole/pi-hole
-          - ollama/ollama
-          - ClassicOldSong/Apollo
-          - ClassicOldSong/moonlight-android
-          - microsoft/powertoys
-          - dani-garcia/vaultwarden
-          - paperless-ngx/paperless-ngx
-          - karakeep-app/karakeep
-          - sst/opencode
-          - eoyilmaz/displaycal-py3
+      - $include: ../widgets/tailscale-stats.yml
 
     - size: full
       widgets:
@@ -45,6 +13,11 @@
           running-only: false
           hide-by-default: false
           containers:
+            nebula-sync:
+              name: Nebula Sync
+              description: Pi-hole config sync
+              icon: sh:sync-in-light
+              hide: false
             caddy:
               name: Caddy
               description: Reverse proxy
@@ -237,4 +210,36 @@
       - $include: ../widgets/jellyfin-stats.yml
       # - $include: ../widgets/gluetun-stats.yml
       - $include: ../widgets/karakeep-stats.yml
-      - $include: ../widgets/tailscale-stats.yml
+      - type: releases
+        cache: 6h
+        show-source-icon: true
+        collapse-after: 5
+        limit: 20
+        repositories:
+          - Tecnativa/docker-socket-proxy
+          - alam00000/bentopdf
+          - remsky/Kokoro-FastAPI
+          - tailscale/tailscale
+          - jellyfin/jellyfin
+          - Sonarr/Sonarr
+          - Radarr/Radarr
+          - Lidarr/Lidarr
+          - Prowlarr/Prowlarr
+          - Cleanuparr/Cleanuparr
+          - qbittorrent/qBittorrent
+          - home-assistant/core
+          - glanceapp/glance
+          - open-webui/open-webui
+          - immich-app/immich
+          - syncthing/syncthing
+          - n8n-io/n8n
+          - pi-hole/pi-hole
+          - ollama/ollama
+          - ClassicOldSong/Apollo
+          - ClassicOldSong/moonlight-android
+          - microsoft/powertoys
+          - dani-garcia/vaultwarden
+          - paperless-ngx/paperless-ngx
+          - karakeep-app/karakeep
+          - sst/opencode
+          - eoyilmaz/displaycal-py3

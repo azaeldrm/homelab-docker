@@ -6,8 +6,8 @@
     Authorization: Bearer ${TAILSCALE_API_KEY}
   cache: 10m
   options:
-    collapseAfter: 6
-    # disableOfflineIndicator: true
+    collapseAfter: 0
+    disableOfflineIndicator: true
     disableUpdateIndicator: true
     # prioritiseTags: true
   template: |
