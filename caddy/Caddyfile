@@ -1,6 +1,7 @@
 # caddy/Caddyfile
 
-# ==== HOMELAB SERVICES ====
+
+# ======== HOMELAB SERVICES ========
 obsidian.{$DOMAIN} {
   tls internal
   reverse_proxy obsidian:3000
@@ -33,6 +34,8 @@ beszel.{$DOMAIN} {
   tls internal
   reverse_proxy beszel-hub:8090
 }
+# ==================================
+
 
 
 # ==== HOMELAB COMPUTE SERVICES ====
@@ -48,9 +51,11 @@ n8n.compute.{$DOMAIN} {
   tls internal
   reverse_proxy {$COMPUTE_IP}:5678
 }
+# ==================================
 
 
-# ==== MEDIA SERVICES ====
+
+# ========= MEDIA SERVICES =========
 jellyfin.media.{$DOMAIN} {
   tls internal
   reverse_proxy {$MEDIA_IP}:8096
@@ -83,9 +88,11 @@ bazarr.media.{$DOMAIN} {
   tls internal
   reverse_proxy {$MEDIA_IP}:6767
 }
+# ==================================
 
 
-# ==== HOMELAB NAS SERVICES ====
+
+# ====== HOMELAB NAS SERVICES ======
 nas.{$DOMAIN} {
   tls internal
   reverse_proxy {$NAS_IP}:5000
@@ -94,14 +101,20 @@ immich.nas.{$DOMAIN} {
   tls internal
   reverse_proxy {$NAS_IP}:2283
 }
-pihole.nas.{$DOMAIN} {
+# ==================================
+
+
+
+# ======== PIHOLE SERVICES =========
+pihole.{$DOMAIN} {
   tls internal
-  reverse_proxy {$NAS_IP}:8080
+  reverse_proxy {$PIHOLE_IP}:80
 }
+# ==================================
 
 
 
-# ==== SURFACE 11 SERVICES ====
+# ====== SURFACE 11 SERVICES =======
 apollo.sp11.{$DOMAIN} {
   tls internal
   reverse_proxy https://{$SP11_IP}:47990 {
@@ -110,10 +123,11 @@ apollo.sp11.{$DOMAIN} {
     }
   }
 }
+# ==================================
 
 
 
-# ==== PC SERVICES ====
+# ======== MAIN PC SERVICES ========
 apollo.pc.{$DOMAIN} {
   tls internal
   reverse_proxy https://{$PC_IP}:47990 {
@@ -122,3 +136,4 @@ apollo.pc.{$DOMAIN} {
     }
   }
 }
+# ==================================

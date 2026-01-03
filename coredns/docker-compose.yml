@@ -8,6 +8,7 @@ services:
     command: -conf /Corefile
     network_mode: "host"
     restart: unless-stopped
+    env_file: .env
     environment:
       - DOMAIN=${DOMAIN}
       - COREDNS_BIND_IP=${COREDNS_BIND_IP}
