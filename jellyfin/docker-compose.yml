@@ -15,13 +15,12 @@ services:
       - /mnt/media:/media
     networks:
       - media-net
+    devices:
+      - /dev/dri:/dev/dri              # Required for QuickSync GPU access
 
 networks:
   media-net:
     external: true
 
-    # 🔥 Intel QuickSync Hardware Acceleration
-    # devices:
-    #   - /dev/dri:/dev/dri              # Required for QuickSync GPU access
 
 

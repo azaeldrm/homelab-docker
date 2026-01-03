@@ -66,6 +66,23 @@ services:
       - /mnt/downloads:/downloads
     restart: unless-stopped
 
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    networks:
+      - media-net
+    ports:
+      - ${MEDIA_IP}:6767:6767
+    environment:
+      - TZ=America/New_York
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./config/bazarr:/config
+      - /mnt/media/tv:/tv
+      - /mnt/media/movies:/movies
+    restart: unless-stopped
+
   cleanuparr:
     image: ghcr.io/cleanuparr/cleanuparr:latest
     container_name: cleanuparr
