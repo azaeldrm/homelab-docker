@@ -3,7 +3,7 @@
   cache: 1d
   url: ${IMMICH_NAS_URL}/api/server/statistics
   headers:
-    x-api-key: ${IMMICH_API_KEY}
+    x-api-key: ${IMMICH_NAS_API_KEY}
     Accept: application/json
   template: |
     <div class="flex justify-between text-center">

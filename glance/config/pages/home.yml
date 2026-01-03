@@ -49,8 +49,13 @@
           cache: 2h
           subreddit: technology
           show-thumbnails: true
-          # collapse-after: 4
-          limit: 8
+          collapse-after: 10
+          limit: 10
 
     - size: small
-      widgets: []
+      widgets:
+        - type: dns-stats
+          service: pihole-v6
+          url: ${PIHOLE_URL}
+          password: ${PIHOLE_PASSWORD}
+          hide-top-domains: false
