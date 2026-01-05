@@ -13,4 +13,4 @@ services:
       LISTEN: ${LISTEN}
       KEY: ${KEY}
       TOKEN: ${TOKEN}
-      HUB_URL: http://homelab:8090
+      HUB_URL: ${HUB_URL}
