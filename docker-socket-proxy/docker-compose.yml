@@ -4,10 +4,9 @@ services:
     container_name: docker-socket-proxy
     restart: unless-stopped
     ports:
-      - "${HOST_IP}:2375:2375"
+      - "2375:2375"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       LOG_LEVEL: info
       CONTAINERS: 1
-      INFO: 1
