@@ -34,6 +34,10 @@ beszel.{$DOMAIN} {
   tls internal
   reverse_proxy beszel-hub:8090
 }
+router.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$ROUTER_IP}
+}
 # ==================================
 
 
