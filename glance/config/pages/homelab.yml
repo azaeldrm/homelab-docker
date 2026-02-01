@@ -54,7 +54,7 @@
             ezcopper:
               name: EZCopper
               description: Discord Amazon tracking bot
-              icon: si:discord
+              icon: sh:notediscovery-light
               hide: false
             coredns:
               name: CoreDNS
@@ -75,11 +75,6 @@
               name: Obsidian
               description: KB note-taking app
               icon: si:obsidian
-              hide: false
-            ezcopper:
-              name: EZCopper
-              description: Discord bot for Amazon tracking
-              icon: si:amazon
               hide: false
             ollama:
               name: Ollama
@@ -178,11 +173,6 @@
               description: Computing environment
               icon: si:jupyter
               hide: false
-            wolf:
-              name: Wolf
-              description: Gaming container
-              icon: sh:steam-light
-              hide: false
             kokoro-fastapi:
               name: Kokoro-FastAPI
               description: OpenAI‑compatible TTS server
@@ -208,10 +198,19 @@
               description: Local LLM chat WebUI
               icon: sh:open-webui
               hide: false
-            wolf:
+            wolf-wolf-1:
+              id: wolf
               name: Wolf
-              description: Gaming container manager
-              icon: sh:gamepad-light
+              description: Gaming container
+              icon: sh:steam-light
+              hide: false
+            WolfPulseAudio:
+              parent: wolf
+              name: PulseAudio
+              hide: false
+            WolfSteam_de2849a5-5cbe-4d50-a025-9414efd8ca85:
+              parent: wolf
+              name: Steam
               hide: false
             docker-socket-proxy:
               name: Docker Socket Proxy
