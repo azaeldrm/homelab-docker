@@ -168,6 +168,11 @@
               description: Computing environment
               icon: si:jupyter
               hide: false
+            wolf:
+              name: Wolf
+              description: Gaming container
+              icon: sh:steam-light
+              hide: false
             kokoro-fastapi:
               name: Kokoro-FastAPI
               description: OpenAI‑compatible TTS server
@@ -192,6 +197,11 @@
               name: Open WebUI
               description: Local LLM chat WebUI
               icon: sh:open-webui
+              hide: false
+            wolf:
+              name: Wolf
+              description: Gaming container manager
+              icon: sh:gamepad-light
               hide: false
             docker-socket-proxy:
               name: Docker Socket Proxy

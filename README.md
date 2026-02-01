@@ -45,7 +45,7 @@ This repository manages Docker Compose configurations for various services runni
 - **Hyperion**: Ambient lighting software for creating immersive experiences.
 - **BentoPDF**: A PDF conversion and manipulation service.
 - **qbittorrent**: A BitTorrent client with VPN support (Gluetun).
-- **steam**: Steam container for gaming.
+- **Wolf**: A gaming container for running PC games via Games on Whales.
 
 ## Environment Setup
 
