@@ -29,15 +29,12 @@ This repository manages Docker Compose configurations for various services runni
 - **Beszel Agent**: Monitoring agent for collecting system metrics.
 - **n8n**: A workflow automation tool for connecting various services.
 
-### Smart Home
-- **Home Assistant**: Open-source home automation platform to control smart devices.
-- **Matter Server**: A bridge for Matter-compatible smart home devices.
-
 ### Networking & Infrastructure
 - **Caddy**: A powerful, easy-to-use web server with automatic HTTPS.
 - **docker-socket-proxy**: A secure Docker socket proxy for controlling the Docker daemon.
 
 ### Utilities
+- **EZCopper**: A Playwright bot with browser automation that monitors Discord channels for Amazon tracking.
 - **Paperless-ngx**: A document management application that transforms physical documents into searchable archives.
 - **Karakeep**: A self-hosted bookmarking and archiving tool for saving, tagging, and retrieving web content.
 - **Obsidian**: A self-hosted client for the Obsidian note-taking app.

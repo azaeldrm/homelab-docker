@@ -51,6 +51,11 @@
               parent: karakeep
               name: Chrome
               hide: false
+            ezcopper:
+              name: EZCopper
+              description: Discord Amazon tracking bot
+              icon: si:discord
+              hide: false
             coredns:
               name: CoreDNS
               description: Container DNS server
@@ -70,6 +75,11 @@
               name: Obsidian
               description: KB note-taking app
               icon: si:obsidian
+              hide: false
+            ezcopper:
+              name: EZCopper
+              description: Discord bot for Amazon tracking
+              icon: si:amazon
               hide: false
             ollama:
               name: Ollama
