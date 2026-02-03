@@ -4,10 +4,6 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: ezcopper
-    ports:
-      - "6080:6080"  # noVNC
-      - "8000:8000"  # FastAPI - main API
-      - "8001:8001"  # Rules UI
     volumes:
       - ./data:/data
     env_file:
@@ -17,3 +13,9 @@ services:
     shm_size: "1gb"
     restart: unless-stopped
     stop_grace_period: ${STOP_GRACE_PERIOD:-10s}
+    networks:
+      - caddy-net
+
+networks:
+  caddy-net:
+    external: true

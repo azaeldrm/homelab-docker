@@ -54,8 +54,10 @@ if [[ "$ACTION" == "u" ]]; then
 
     # Build if 'b' flag present, otherwise normal up (whole stack)
     if [[ "$FLAGS" == *b* ]]; then
-        echo "Bringing stack up with build (--build)..."
-        docker compose up -d --build || exit 1
+        echo "Building stack with --no-cache..."
+        docker compose build --no-cache || exit 1
+        echo "Bringing stack up..."
+        docker compose up -d || exit 1
     else
         echo "Bringing stack up without build..."
         docker compose up -d || exit 1

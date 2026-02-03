@@ -34,6 +34,15 @@ beszel.{$DOMAIN} {
   tls internal
   reverse_proxy beszel-hub:8090
 }
+ezcopper.{$DOMAIN} {
+  tls internal
+  reverse_proxy /events ezcopper:8000
+  reverse_proxy ezcopper:8001
+}
+monitor.ezcopper.{$DOMAIN} {
+  tls internal
+  reverse_proxy ezcopper:6080
+}
 router.{$DOMAIN} {
   tls internal
   reverse_proxy {$ROUTER_IP}
