@@ -1,7 +1,7 @@
 # Stage 1: Clone and prepare application
 FROM mcr.microsoft.com/playwright/python:v1.40.0-jammy AS builder
 ARG REPO=https://github.com/azaeldrm/ezcopper.git
-ARG REPO_BRANCH=main
+ARG REPO_BRANCH=feature/multiflow
 
 # Use GITHUB_TOKEN env var or fallback to SSH
 RUN apt-get update && apt-get install -y --no-install-recommends \
