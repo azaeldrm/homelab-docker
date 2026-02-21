@@ -69,6 +69,10 @@ n8n.compute.{$DOMAIN} {
 
 
 # ========= MEDIA SERVICES =========
+immich.media.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$MEDIA_IP}:2283
+}
 jellyfin.media.{$DOMAIN} {
   tls internal
   reverse_proxy {$MEDIA_IP}:8096
