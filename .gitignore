@@ -41,6 +41,7 @@ obsidian/vault/
 data/
 models/
 config/
+repo/
 
 # ─── Paperless-ngx ───────────────────────────────────────
 paperless-ngx/consume/

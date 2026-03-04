@@ -70,11 +70,27 @@ elif [[ "$ACTION" == "r" ]]; then
     fi
     echo "Restarting stack '$STACK_DIR'..."
     echo "Note: Using down && up to ensure environment variable changes are applied"
-    docker compose down && docker compose up -d || exit 1
+    docker compose down || exit 1
+    
+    # Clean up orphaned Wolf containers if this is the wolf stack
+    if [[ "$STACK_DIR" == "wolf" ]]; then
+        echo "Cleaning up orphaned Wolf containers..."
+        docker rm -f $(docker ps -aq --filter name=WolfPulseAudio) 2>/dev/null || true
+        docker rm -f $(docker ps -aq --filter "name=WolfSteam") 2>/dev/null || true
+    fi
+    
+    docker compose up -d || exit 1
 
 else
     echo "Bringing stack down..."
     docker compose down || exit 1
+    
+    # Clean up orphaned Wolf containers if this is the wolf stack
+    if [[ "$STACK_DIR" == "wolf" ]]; then
+        echo "Cleaning up orphaned Wolf containers..."
+        docker rm -f $(docker ps -aq --filter name=WolfPulseAudio) 2>/dev/null || true
+        docker rm -f $(docker ps -aq --filter "name=WolfSteam") 2>/dev/null || true
+    fi
 fi
 
 # echo "Stack '$STACK_DIR' action '$ACTION' completed."

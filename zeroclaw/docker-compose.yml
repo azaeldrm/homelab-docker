@@ -1,0 +1,20 @@
+services:
+  zeroclaw:
+    image: zeroclaw:whatsapp
+    user: "1000:1000"
+    container_name: zeroclaw
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./data:/zeroclaw-data
+    ports:
+      - "3000:3000"
+    tty: true
+    stdin_open: true
+    command: ["channel", "start"]
+    networks:
+      - ollama-net
+
+networks:
+  ollama-net:
+    external: true

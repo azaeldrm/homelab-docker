@@ -4,7 +4,7 @@ services:
     container_name: ollama
     restart: unless-stopped
     ports:
-      - "127.0.0.1:11434:11434"
+      - "11434:11434"
     privileged: true
     volumes:
       - ollama:/root/.ollama
@@ -12,7 +12,7 @@ services:
       - ollama-net
     environment:
       - OLLAMA_HOST=0.0.0.0:11434
-      - OLLAMA_CONTEXT_LENGTH=64000
+      - OLLAMA_CONTEXT_LENGTH=131072
 
 volumes:
   ollama:
