@@ -20,6 +20,12 @@
 - Custom configs/scripts go in service subdirectories
 - Use comments with `#` prefix for documentation
 
+## Verification & Status
+- Use `docker ps` to check running containers
+- Use `docker compose ps` to check service status
+- Use `docker inspect <container>` for detailed container info
+- Use `docker logs <container>` to view logs
+
 ## Security & Best Practices
 - Never commit `.env` files or secrets (see `.gitignore`)
 - Use external networks for service communication

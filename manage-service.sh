@@ -1,5 +1,27 @@
 #!/bin/bash
 
+# Docker Homelab Service Management Script
+# Usage: ./manage-service.sh <service> <action> [flags]
+#
+# Actions:
+#   u = up      - Start the service (with optional pull/build)
+#   d = down    - Stop and remove the service
+#   r = restart - Down then up to apply .env changes
+#
+# Flags (for 'u' and 'r' actions):
+#   p = pull --pull=always  - Force fresh image pulls from registry
+#   b = build               - Build/rebuild images (--no-cache for u, --build for r)
+#
+# Examples:
+#   ./manage-service.sh apache u               # Start without building/pulling
+#   ./manage-service.sh apache u p             # Pull fresh images then start
+#   ./manage-service.sh apache u b             # Build image then start
+#   ./manage-service.sh apache u pb            # Pull AND build then start
+#   ./manage-service.sh apache r               # Restart (down+up, no pull/build)
+#   ./manage-service.sh apache r p             # Fresh pull then restart
+#   ./manage-service.sh apache r b             # Rebuild then restart
+#   ./manage-service.sh apache r pb            # Pull fresh + rebuild then restart
+
 # Set base directory
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -48,8 +70,8 @@ cd "$STACK_PATH" || exit 1
 if [[ "$ACTION" == "u" ]]; then
     # Pull only if 'p' flag present (whole stack)
     if [[ "$FLAGS" == *p* ]]; then
-        echo "Pulling latest images for stack '$STACK_DIR'..."
-        docker compose pull || exit 1
+        echo "Pulling latest fresh images for stack '$STACK_DIR'..."
+        docker compose pull --pull=always || exit 1
     fi
 
     # Build if 'b' flag present, otherwise normal up (whole stack)
@@ -64,12 +86,20 @@ if [[ "$ACTION" == "u" ]]; then
     fi
 
 elif [[ "$ACTION" == "r" ]]; then
-    # Restart ignores flags by design (no pull/build)
-    if [[ -n "$FLAGS" ]]; then
-        echo "Note: flags are ignored for restart."
-    fi
     echo "Restarting stack '$STACK_DIR'..."
     echo "Note: Using down && up to ensure environment variable changes are applied"
+    
+    if [[ "$FLAGS" == *p* ]]; then
+        echo "Pulling latest fresh images for stack '$STACK_DIR'..."
+        docker compose pull --pull=always || exit 1
+    fi
+    
+    if [[ "$FLAGS" == *b* ]]; then
+        echo "Building stack with --build flag..."
+    else
+        echo "No build flag - using cached images..."
+    fi
+    
     docker compose down || exit 1
     
     # Clean up orphaned Wolf containers if this is the wolf stack
@@ -79,7 +109,13 @@ elif [[ "$ACTION" == "r" ]]; then
         docker rm -f $(docker ps -aq --filter "name=WolfSteam") 2>/dev/null || true
     fi
     
-    docker compose up -d || exit 1
+    if [[ "$FLAGS" == *b* ]]; then
+        echo "Starting stack with --build flag..."
+        docker compose up -d --build || exit 1
+    else
+        echo "Starting stack without build..."
+        docker compose up -d || exit 1
+    fi
 
 else
     echo "Bringing stack down..."
