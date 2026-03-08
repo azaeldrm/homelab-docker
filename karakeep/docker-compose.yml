@@ -20,6 +20,7 @@ services:
     networks:
       - internal
       - caddy-net
+      - ollama-net
   chrome:
     image: gcr.io/zenika-hub/alpine-chrome:124
     restart: unless-stopped
@@ -48,6 +49,8 @@ networks:
   internal:
     external: true
   caddy-net:
+    external: true
+  ollama-net:
     external: true
 
 volumes:

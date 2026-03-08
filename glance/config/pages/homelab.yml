@@ -152,6 +152,24 @@
               description: Container VPN client
               icon: si:openvpn
               hide: false
+            immich_server:
+              id: immich
+              name: Immich
+              description: Photo/video backup server
+              icon: si:immich
+              hide: false
+            immich_machine_learning:
+              parent: immich
+              name: Machine Learning
+              hide: false
+            immich_postgres:
+              parent: immich
+              name: Postgres
+              hide: false
+            immich_redis:
+              parent: immich
+              name: Redis
+              hide: false
             cleanuparr:
               name: Cleanuparr
               description: Media cleanup tool
