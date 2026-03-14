@@ -64,6 +64,14 @@ n8n.compute.{$DOMAIN} {
   tls internal
   reverse_proxy {$COMPUTE_IP}:5678
 }
+murmur.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:9010
+}
+murmur.test.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:9011
+}
 # ==================================
 
 
