@@ -12,7 +12,9 @@ services:
       - ollama-net
     environment:
       - OLLAMA_HOST=0.0.0.0:11434
-      - OLLAMA_CONTEXT_LENGTH=131072
+      - OLLAMA_CONTEXT_LENGTH=8192
+      - OLLAMA_NUM_PARALLEL=2
+      - OLLAMA_SCHED_SPREAD=true
 
 volumes:
   ollama:

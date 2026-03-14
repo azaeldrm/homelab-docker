@@ -1,0 +1,21 @@
+services:
+  murmur:
+    image: ghcr.io/azaeldrm/murmur:latest
+    container_name: murmur
+    ports:
+      - "9010:9010"
+    volumes:
+      - ./data:/data
+      - ./config:/config
+    env_file: .env
+    environment:
+      - MURMUR_DATA_DIR=/data
+      - MURMUR_CONFIG_DIR=/config
+    networks:
+      - murmur_net
+    restart: unless-stopped
+
+networks:
+  murmur_net:
+    external: true
+    name: ${DOCKER_NETWORK}

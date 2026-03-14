@@ -240,6 +240,11 @@
               description: System monitoring agent
               icon: sh:agent-zero-light
               hide: false
+            murmur:
+              name: Murmur
+              description: Self-hosted read-along app for books
+              icon: sh:book-audio-light
+              hide: false
 
     - size: small
       widgets:

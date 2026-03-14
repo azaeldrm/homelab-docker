@@ -1,9 +1,12 @@
 # Docker Homelab Agent Guidelines
 
+## Alias
+- **mc**: Shortcut for `./manage-container.sh` (e.g., `mc <service> u`, `mc <service> r pb`)
+
 ## Build/Deploy Commands
-- **Start service**: `./manage-service.sh <service> u [flags]` (flags: p=pull, b=build)
-- **Stop service**: `./manage-service.sh <service> d`
-- **Restart service**: `./manage-service.sh <service> r`
+- **Start service**: `mc <service> u [flags]` (flags: p=pull, b=build)
+- **Stop service**: `mc <service> d`
+- **Restart service**: `mc <service> r`
 - **View logs**: `cd <service>/ && docker compose logs -f`
 - **Test single service**: `cd <service>/ && docker compose up -d --build`
 

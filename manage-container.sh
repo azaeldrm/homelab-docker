@@ -71,7 +71,7 @@ if [[ "$ACTION" == "u" ]]; then
     # Pull only if 'p' flag present (whole stack)
     if [[ "$FLAGS" == *p* ]]; then
         echo "Pulling latest fresh images for stack '$STACK_DIR'..."
-        docker compose pull --pull=always || exit 1
+        docker compose pull --policy always || exit 1
     fi
 
     # Build if 'b' flag present, otherwise normal up (whole stack)
@@ -91,7 +91,7 @@ elif [[ "$ACTION" == "r" ]]; then
     
     if [[ "$FLAGS" == *p* ]]; then
         echo "Pulling latest fresh images for stack '$STACK_DIR'..."
-        docker compose pull --pull=always || exit 1
+        docker compose pull --policy always || exit 1
     fi
     
     if [[ "$FLAGS" == *b* ]]; then

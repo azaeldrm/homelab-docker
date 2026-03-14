@@ -1,0 +1,29 @@
+services:
+  whisper:
+    image: onerahmet/openai-whisper-asr-webservice:latest-gpu
+    container_name: whisper
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - whisper-cache:/root/.cache
+    environment:
+      - ASR_ENGINE=${ASR_ENGINE:-faster_whisper}
+      - ASR_MODEL=${ASR_MODEL:-base}
+      - ASR_DEVICE=${ASR_DEVICE:-cuda}
+    networks:
+      - ollama-net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+networks:
+  ollama-net:
+    external: true
+
+volumes:
+  whisper-cache:
