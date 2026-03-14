@@ -11,10 +11,10 @@ services:
       - ./config:/config
       - ../obsidian/vault:/vault
     ports:
-      - 8384:8384
       - 22000:22000/tcp
       - 22000:22000/udp
-      - 21027:21027/udp
+      # Enable if local LAN discovery is needed
+      # - 21027:21027/udp
     restart: unless-stopped
     networks:
       - caddy-net
