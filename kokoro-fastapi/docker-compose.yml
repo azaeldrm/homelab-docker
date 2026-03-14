@@ -14,7 +14,10 @@ services:
               capabilities: [gpu]
     networks:
       - ollama-net
+      - openclaw-net
 
 networks:
   ollama-net:
+    external: true
+  openclaw-net:
     external: true

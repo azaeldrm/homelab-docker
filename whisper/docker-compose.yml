@@ -3,8 +3,6 @@ services:
     image: onerahmet/openai-whisper-asr-webservice:latest-gpu
     container_name: whisper
     restart: unless-stopped
-    ports:
-      - "9000:9000"
     volumes:
       - whisper-cache:/root/.cache
     environment:
@@ -13,6 +11,7 @@ services:
       - ASR_DEVICE=${ASR_DEVICE:-cuda}
     networks:
       - ollama-net
+      - openclaw-net
     deploy:
       resources:
         reservations:
@@ -21,9 +20,11 @@ services:
               count: 1
               capabilities: [gpu]
 
+volumes:
+  whisper-cache:
+
 networks:
   ollama-net:
     external: true
-
-volumes:
-  whisper-cache:
+  openclaw-net:
+    external:: true

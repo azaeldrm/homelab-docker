@@ -3,8 +3,6 @@ services:
     image: ollama/ollama:latest
     container_name: ollama
     restart: unless-stopped
-    ports:
-      - "11434:11434"
     privileged: true
     volumes:
       - ollama:/root/.ollama
@@ -13,8 +11,6 @@ services:
     environment:
       - OLLAMA_HOST=0.0.0.0:11434
       - OLLAMA_CONTEXT_LENGTH=8192
-      - OLLAMA_NUM_PARALLEL=2
-      - OLLAMA_SCHED_SPREAD=true
 
 volumes:
   ollama:
