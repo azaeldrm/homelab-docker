@@ -36,12 +36,19 @@ beszel.{$DOMAIN} {
 }
 ezcopper.{$DOMAIN} {
   tls internal
-  reverse_proxy /events ezcopper:8000
-  reverse_proxy ezcopper:8001
+  reverse_proxy ezcopper:8000
+}
+ezcopper.test.{$DOMAIN} {
+  tls internal
+  reverse_proxy ezcopper-test:8000
 }
 monitor.ezcopper.{$DOMAIN} {
   tls internal
   reverse_proxy ezcopper:6080
+}
+monitor.ezcopper.test.{$DOMAIN} {
+  tls internal
+  reverse_proxy ezcopper-test:6080
 }
 router.{$DOMAIN} {
   tls internal
@@ -71,6 +78,14 @@ murmur.compute.{$DOMAIN} {
 murmur.test.compute.{$DOMAIN} {
   tls internal
   reverse_proxy {$COMPUTE_IP}:9011
+}
+murmur.dev.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:9020
+}
+syncthing.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:8384
 }
 # ==================================
 

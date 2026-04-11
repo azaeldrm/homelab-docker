@@ -1,8 +1,6 @@
 services:
   ezcopper:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/azaeldrm/ezcopper:latest
     container_name: ezcopper
     volumes:
       - ./data:/data
