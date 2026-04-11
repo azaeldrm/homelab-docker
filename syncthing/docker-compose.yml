@@ -9,16 +9,9 @@ services:
       - TZ=America/New_York
     volumes:
       - ./config:/config
-      - ../obsidian/vault:/vault
+      - ./data:/data
     ports:
+      - 8384:8384
       - 22000:22000/tcp
       - 22000:22000/udp
-      # Enable if local LAN discovery is needed
-      # - 21027:21027/udp
     restart: unless-stopped
-    networks:
-      - caddy-net
-
-networks:
-  caddy-net:
-    external: true

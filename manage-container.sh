@@ -23,7 +23,13 @@
 #   ./manage-service.sh apache r pb            # Pull fresh + rebuild then restart
 
 # Set base directory
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# If called via symlink in /usr/local/bin, use the actual homelab directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ "$SCRIPT_DIR" = "/usr/local/bin" ]; then
+    BASE_DIR="/srv/homelab/docker"
+else
+    BASE_DIR="$SCRIPT_DIR"
+fi
 
 # Args: stack_dir, action (u|d|r), optional flags (e.g., p, b, pb)
 if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then

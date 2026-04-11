@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MODEL_DIR="/srv/homelab/docker/llama-cpp/data/models"
+
+usage () {
+  echo ""
+  echo "Usage:"
+  echo "  llama-model-get <URL> [filename.gguf]"
+  echo ""
+  exit 1
+}
+
+[[ $# -lt 1 || $# -gt 2 ]] && usage
+
+URL="$1"
+
+mkdir -p "$MODEL_DIR"
+
+if [[ $# -eq 2 ]]; then
+  OUT="$2"
+else
+  OUT="$(basename "${URL%%\?*}")"
+fi
+
+DEST="$MODEL_DIR/$OUT"
+
+echo ""
+echo "Downloading model:"
+echo "$URL"
+echo ""
+echo "Destination:"
+echo "$DEST"
+echo ""
+
+if command -v curl >/dev/null 2>&1; then
+  curl -L --progress-bar "$URL" -o "$DEST"
+elif command -v wget >/dev/null 2>&1; then
+  wget --show-progress -O "$DEST" "$URL"
+else
+  echo "Install curl or wget."
+  exit 1
+fi
+
+echo ""
+echo "Download complete."
+echo ""

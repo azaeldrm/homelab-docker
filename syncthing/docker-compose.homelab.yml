@@ -1,0 +1,10 @@
+# syncthing/docker-compose.homelab.yml
+# Usage on homelab: docker compose -f docker-compose.yml -f docker-compose.homelab.yml up -d
+services:
+  syncthing:
+    networks:
+      - caddy-net
+
+networks:
+  caddy-net:
+    external: true

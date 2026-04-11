@@ -1,0 +1,51 @@
+services:
+  llama-cpp:
+    image: ${IMAGE}
+    container_name: llama-cpp
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:${HOST_PORT}:8080"
+
+    volumes:
+      - ./data/models:/models:ro
+
+    command:
+      - -m
+      - ${MODEL_PATH}
+      - --alias
+      - ${MODEL_ALIAS}
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8080"
+      - -c
+      - "${CTX_SIZE}"
+      - --n-gpu-layers
+      - "${GPU_LAYERS}"
+      - --split-mode
+      - "${SPLIT_MODE}"
+      - --tensor-split
+      - "${TENSOR_SPLIT}"
+      - -np
+      - "${PARALLEL}"
+      - --temp
+      - "${TEMP}"
+      - --top-p
+      - "${TOP_P}"
+      - --top-k
+      - "${TOP_K}"
+      - --min-p
+      - "${MIN_P}"
+      - --kv-unified
+      - --cache-type-k
+      - "${CACHE_TYPE_K}"
+      - --cache-type-v
+      - "${CACHE_TYPE_V}"
+      - --flash-attn
+      - "${FLASH_ATTN}"
+      - --fit
+      - "${FIT}"
+      - --no-context-shift
+
+    gpus: all
