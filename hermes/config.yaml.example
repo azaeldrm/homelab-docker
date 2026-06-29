@@ -1,0 +1,32 @@
+# hermes/config.yaml.example
+# Reference for hermes/data/config.yaml (HERMES_HOME=/opt/data → ./data).
+# The live copy lives in ./data/config.yaml (gitignored). Edit that one, then
+# restart:  mc hermes r
+#
+# This wires Hermes to the local llama-cpp OpenAI-compatible server.
+
+# ─── Model: local llama-cpp ──────────────────────────────────────────────────
+model:
+  # "custom" = any OpenAI-compatible endpoint (aliases: ollama/vllm/llamacpp).
+  provider: "custom"
+  # llama-cpp on the host loopback (network_mode: host). Must end in /v1.
+  base_url: "http://127.0.0.1:11435/v1"
+  # llama-cpp ignores the key, but the OpenAI SDK requires a non-empty value.
+  api_key: "sk-local"
+  # Model alias served by llama-cpp (see llama-cpp/.env MODEL_ALIAS).
+  default: "qwen3-27b"
+  # llama-cpp doesn't advertise context via /v1/models — set it explicitly
+  # to match llama-cpp/.env CTX_SIZE.
+  context_length: 131072
+
+# ─── Terminal backend ────────────────────────────────────────────────────────
+# "local" runs tool commands inside this container — the container is the
+# security boundary. Switch to "docker" only if the host docker socket is
+# mounted in.
+terminal:
+  backend: "local"
+  cwd: "/opt/data/workspace"
+  timeout: 180
+
+agent:
+  max_turns: 60

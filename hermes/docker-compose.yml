@@ -1,0 +1,42 @@
+# hermes/docker-compose.yml
+# Hermes Agent — self-hosted agent harness (NousResearch) pointed at the
+# local llama-cpp OpenAI-compatible endpoint (127.0.0.1:11435).
+#
+# ─── Networking ─────────────────────────────────────────────────────────────
+# Uses host networking (upstream default) so the agent can reach llama-cpp on
+# the host loopback (127.0.0.1:11435). The dashboard is bound to all interfaces
+# (:9119) so the homelab Caddy reaches it at COMPUTE_IP:9119 and it's available
+# over Tailscale — the dashboard requires an auth provider on any non-loopback
+# bind (June 2026 hardening), so set one up on first launch.
+#
+# ─── Permissions ────────────────────────────────────────────────────────────
+# HERMES_UID/HERMES_GID remap the in-container user to the host owner of ./data
+# so files written into the bind mount stay readable/writable on the host.
+services:
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    network_mode: host
+    env_file:
+      - .env
+    volumes:
+      - ./data:/opt/data
+    command: ["gateway", "run"]
+
+  hermes-dashboard:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes-dashboard
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - hermes
+    env_file:
+      - .env
+    volumes:
+      - ./data:/opt/data
+    # Web UI on :9119, bound to all interfaces so the homelab Caddy can reach
+    # it at COMPUTE_IP:9119 (and for Tailscale/LAN access) — same pattern as the
+    # other compute services. A non-loopback bind MANDATES an auth provider
+    # (password/OAuth) as of the June 2026 hardening, so it is not open.
+    command: ["dashboard", "--host", "0.0.0.0", "--no-open"]
