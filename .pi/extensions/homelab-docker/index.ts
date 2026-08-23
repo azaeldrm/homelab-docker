@@ -6,8 +6,10 @@
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { registerHomelabCommand } from "./command.ts";
 import { registerHomelabTool } from "./tools.ts";
 
 export default function (pi: ExtensionAPI) {
 	registerHomelabTool(pi);
+	registerHomelabCommand(pi);
 }

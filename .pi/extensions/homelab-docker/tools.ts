@@ -45,6 +45,7 @@ export const MAX_LOG_TAIL = DEFAULT_MAX_LINES; // 2000
 export const DEFAULT_TIMEOUT_MS = 120_000;
 export const LONG_TIMEOUT_MS = 600_000;
 export const PROGRESS_INTERVAL_MS = 5_000;
+export const AUTO_DENY_TIMEOUT_MS = 60_000;
 export const MANAGE_SCRIPT = "manage-container.sh";
 
 export type HomelabAction = "status" | "list" | "logs" | "up" | "restart" | "down";
@@ -305,6 +306,139 @@ export interface HomelabDetails {
 	logs?: LogDetails;
 }
 
+export interface HomelabInput {
+	action: HomelabAction;
+	service?: string;
+	flags?: HomelabFlags;
+	tail?: number;
+}
+
+export interface HomelabActionResult {
+	text: string;
+	details: HomelabDetails;
+}
+
+/** Execute a homelab action through the shared validator/runner path. */
+export async function executeHomelabAction(
+	pi: Pick<ExtensionAPI, "exec">,
+	cwd: string,
+	params: HomelabInput,
+	signal?: AbortSignal,
+	onProgress?: (label: string, elapsedMs: number) => void,
+): Promise<HomelabActionResult> {
+	const checked = checkParams(params.action, params.service, params.flags, params.tail);
+	if (!checked.ok) throw new Error(checked.error);
+
+	const baseDir = resolveBaseDir(cwd);
+	if (checked.service) {
+		const svc = checkService(baseDir, checked.service);
+		if (!svc.ok) throw new Error(svc.error);
+	}
+	if ((params.action === "up" || params.action === "restart" || params.action === "down") &&
+		!fs.existsSync(path.join(baseDir, MANAGE_SCRIPT))) {
+		throw new Error(`${MANAGE_SCRIPT} not found in ${baseDir} — cannot run ${params.action}`);
+	}
+
+	const cmd = buildCommand(baseDir, checked.action, checked.service, checked.flags, checked.tail);
+	const startedAt = Date.now();
+	const outcome = await execHomelabCommand((command, args, options) => pi.exec(command, args, options), cmd, signal, onProgress);
+	if (!outcome.ok) throw new Error(outcome.error + (outcome.output ? `\n${outcome.output.slice(-4000)}` : ""));
+
+	const durationMs = Date.now() - startedAt;
+	let outputText = outcome.output;
+	let logDetails: LogDetails | undefined;
+
+	if (checked.action === "logs") {
+		const { text, details } = await processLogOutput(outcome.output, checked.service!);
+		outputText = text;
+		logDetails = details;
+		if (details.truncated && details.fullOutputPath) {
+			outputText += `\n\n[Showing the last ${details.outputLines} of ${details.totalLines} lines (${formatSize(details.totalBytes)}). Full output saved to: ${details.fullOutputPath}]`;
+		}
+	} else {
+		const trunc = truncateTail(outputText, { maxLines: DEFAULT_MAX_LINES, maxBytes: DEFAULT_MAX_BYTES });
+		outputText = trunc.content;
+	}
+
+	if (!outputText.trim()) outputText = "(no output)";
+
+	return {
+		text: outputText,
+		details: {
+			action: checked.action,
+			service: checked.service,
+			flags: checked.flags,
+			tail: checked.action === "logs" ? checked.tail : undefined,
+			lineCount: outputText.split("\n").length,
+			durationMs,
+			logs: logDetails,
+		},
+	};
+}
+
+export interface RenderableHomelabResult {
+	content?: Array<{ type: string; text?: string }>;
+	details?: HomelabDetails;
+}
+
+export function renderHomelabResult(
+	result: RenderableHomelabResult,
+	{ expanded, isPartial }: { expanded: boolean; isPartial: boolean },
+	theme: { fg(color: string, text: string): string },
+) {
+	const details = result.details as HomelabDetails | undefined;
+
+	if (isPartial) {
+		const c = result.content?.[0];
+		const t = c && c.type === "text" ? c.text ?? "Working…" : "Working…";
+		return new Text(theme.fg("warning", t), 0, 0);
+	}
+
+	const c = result.content?.[0];
+	const output = c && c.type === "text" ? c.text ?? "" : "";
+	const lines = output ? output.split("\n") : [];
+
+	let head: string;
+	if (!details) {
+		head = theme.fg("dim", output.slice(0, 300) || "(no output)");
+	} else {
+		const label = details.service ? `${details.action} ${details.service}` : details.action;
+		const dur = `${(details.durationMs / 1000).toFixed(1)}s`;
+		switch (details.action) {
+			case "logs": {
+				const log = details.logs;
+				head = theme.fg("success", `${details.lineCount} log lines (${dur})`);
+				if (log?.truncated) {
+					head += theme.fg(
+						"warning",
+						` — showing last ${log.outputLines} of ${log.totalLines} (${formatSize(log.totalBytes)}${log.fullOutputPath ? ", full output saved" : ""})`,
+					);
+				}
+				break;
+			}
+			case "up":
+			case "restart":
+			case "down":
+				head = theme.fg("success", `${label}${details.flags ? ` ${details.flags}` : ""} — ${dur}`);
+				break;
+			default:
+				head = theme.fg("success", `${label} — ${dur}`);
+		}
+	}
+
+	if (expanded && output) {
+		const shown = lines.slice(0, 25);
+		for (const line of shown) head += `\n${theme.fg("dim", line)}`;
+		if (lines.length > 25) head += `\n${theme.fg("muted", `… ${lines.length - 25} more lines`)}`;
+		if (details?.logs?.fullOutputPath) head += `\n${theme.fg("dim", `Full logs: ${details.logs.fullOutputPath}`)}`;
+		if (details) head += `\n${theme.fg("muted", "(Ctrl+O to collapse)")}`;
+	} else {
+		head += ` ${theme.fg("muted", "(Ctrl+O to expand)")}`;
+	}
+
+	return new Text(head, 0, 0);
+}
+
 // ─── Tool registration ───────────────────────────────────────────────────
 
 export function registerHomelabTool(pi: ExtensionAPI) {
@@ -423,58 +557,7 @@ export function registerHomelabTool(pi: ExtensionAPI) {
 		},
 
 		renderResult(result, { expanded, isPartial }, theme) {
-			const details = result.details as HomelabDetails | undefined;
-
-			// Streaming progress (from onUpdate)
-			if (isPartial) {
-				const c = result.content?.[0];
-				const t = c && c.type === "text" ? c.text : "Working…";
-				return new Text(theme.fg("warning", t), 0, 0);
-			}
-
-			const c = result.content?.[0];
-			const output = c && c.type === "text" ? c.text : "";
-			const lines = output ? output.split("\n") : [];
-
-			let head: string;
-			if (!details) {
-				head = theme.fg("dim", output.slice(0, 300) || "(no output)");
-			} else {
-				const label = details.service ? `${details.action} ${details.service}` : details.action;
-				const dur = `${(details.durationMs / 1000).toFixed(1)}s`;
-				switch (details.action) {
-					case "logs": {
-						const log = details.logs;
-						head = theme.fg("success", `${details.lineCount} log lines (${dur})`);
-						if (log?.truncated) {
-							head += theme.fg(
-								"warning",
-								` — showing last ${log.outputLines} of ${log.totalLines} (${formatSize(log.totalBytes)}${log.fullOutputPath ? ", full output saved" : ""})`,
-							);
-						}
-						break;
-					}
-					case "up":
-					case "restart":
-					case "down":
-						head = theme.fg("success", `${label}${details.flags ? ` ${details.flags}` : ""} — ${dur}`);
-						break;
-					default:
-						head = theme.fg("success", `${label} — ${dur}`);
-				}
-			}
-
-			if (expanded && output) {
-				const shown = lines.slice(0, 25);
-				for (const line of shown) head += `\n${theme.fg("dim", line)}`;
-				if (lines.length > 25) head += `\n${theme.fg("muted", `… ${lines.length - 25} more lines`)}`;
-				if (details?.logs?.fullOutputPath) head += `\n${theme.fg("dim", `Full logs: ${details.logs.fullOutputPath}`)}`;
-				if (details) head += `\n${theme.fg("muted", "(Ctrl+O to collapse)")}`;
-			} else {
-				head += ` ${theme.fg("muted", "(Ctrl+O to expand)")}`;
-			}
-
-			return new Text(head, 0, 0);
+			return renderHomelabResult(result, { expanded, isPartial }, theme);
 		},
 	});
 }
