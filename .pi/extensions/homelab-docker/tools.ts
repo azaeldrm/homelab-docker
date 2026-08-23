@@ -354,21 +354,53 @@ function health(row: ComposePsRow): string {
 	return match?.[1] ?? "";
 }
 
+function normalizePorts(ports: string | undefined): string {
+	const value = (ports ?? "").replaceAll("0.0.0.0:", "").replaceAll("[::]:", "").trim();
+	return value || "none";
+}
+
+function stateIcon(row: ComposePsRow): string {
+	const value = `${row.State ?? ""} ${row.Status ?? ""} ${health(row)}`.toLowerCase();
+	if (/unhealthy|exited|dead|restarting|error/.test(value)) return "✗";
+	if (/starting|created|paused/.test(value)) return "!";
+	if (/running|up|healthy/.test(value)) return "✓";
+	return "?";
+}
+
+function cardWidth(rows: ComposePsRow[]): number {
+	const longestName = Math.max(18, ...rows.map((row) => (row.Name ?? row.Names ?? "").length));
+	return Math.min(88, Math.max(64, longestName + 42));
+}
+
+function cardLine(label: string, value: string, width: number): string {
+	const body = ` ${label.padEnd(10)} ${truncateCell(value || "-", width - 16)}`;
+	return `│${body.padEnd(width - 2)}│`;
+}
+
+function formatContainerCard(row: ComposePsRow, width: number): string[] {
+	const project = labelValue(row.Labels, "com.docker.compose.project") ?? "-";
+	const service = row.Service ?? labelValue(row.Labels, "com.docker.compose.service") ?? "-";
+	const name = row.Name ?? row.Names ?? "?";
+	const icon = stateIcon(row);
+	const state = row.State ?? "unknown";
+	const h = health(row);
+	const status = row.Status ?? row.RunningFor ?? "";
+	const title = ` ${icon} ${name} `.padEnd(width - 2, "─");
+	return [
+		`┌${title}┐`,
+		cardLine("project", project, width),
+		cardLine("service", service, width),
+		cardLine("state", h ? `${state} (${h})` : state, width),
+		cardLine("status", status, width),
+		cardLine("ports", normalizePorts(row.Ports), width),
+		`└${"─".repeat(width - 2)}┘`,
+	];
+}
+
 export function formatContainerRows(rows: ComposePsRow[], emptyMessage: string): string {
 	if (rows.length === 0) return emptyMessage;
-
-	const rendered = ["PROJECT        SERVICE          CONTAINER          STATE       HEALTH      STATUS                  PORTS"];
-	for (const row of rows) {
-		const project = truncateCell(labelValue(row.Labels, "com.docker.compose.project") ?? "-", 14).padEnd(14);
-		const service = truncateCell(row.Service ?? labelValue(row.Labels, "com.docker.compose.service") ?? "-", 16).padEnd(16);
-		const name = truncateCell(row.Name ?? row.Names ?? "?", 18).padEnd(18);
-		const state = truncateCell(row.State ?? "?", 11).padEnd(11);
-		const h = truncateCell(health(row), 10).padEnd(10);
-		const status = truncateCell(row.Status ?? row.RunningFor ?? "", 22).padEnd(22);
-		const ports = truncateCell((row.Ports ?? "").replaceAll("0.0.0.0:", "").replaceAll("[::]:", ""), 36);
-		rendered.push(`${project} ${service} ${name} ${state} ${h} ${status} ${ports}`.trimEnd());
-	}
-	return rendered.join("\n");
+	const width = cardWidth(rows);
+	return rows.flatMap((row) => formatContainerCard(row, width)).join("\n");
 }
 
 export function formatComposeStatusJson(output: string): string {

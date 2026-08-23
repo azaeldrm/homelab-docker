@@ -46,8 +46,6 @@ async function buildServiceRows(pi: ExtensionAPI, baseDir: string): Promise<Serv
 
 function parseAction(choice: string): { action: HomelabAction; tail?: number; flags?: HomelabFlags } | null {
 	switch (choice) {
-		case "Status":
-			return { action: "status" };
 		case `Logs (tail ${DEFAULT_LOG_TAIL})`:
 			return { action: "logs", tail: DEFAULT_LOG_TAIL };
 		case "Logs (tail 200)":
@@ -80,7 +78,6 @@ async function serviceActionLoop(pi: ExtensionAPI, ctx: ExtensionContext, servic
 	while (true) {
 		const status = await selectedServiceStatus(pi, ctx, service);
 		const choice = await ctx.ui.select(`${service} — current status\n\n${status}\n\nChoose action`, [
-			"Status",
 			`Logs (tail ${DEFAULT_LOG_TAIL})`,
 			"Logs (tail 200)",
 			"Up",
