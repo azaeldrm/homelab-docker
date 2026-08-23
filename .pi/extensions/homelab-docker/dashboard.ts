@@ -16,21 +16,62 @@ interface ServiceRow {
 	label: string;
 }
 
-async function serviceSummary(pi: ExtensionAPI, baseDir: string, service: string): Promise<string> {
+interface ComposeStatusRow {
+	State?: string;
+	Status?: string;
+	Health?: string;
+	HealthStatus?: string;
+}
+
+function truncate(value: string, max: number): string {
+	if (value.length <= max) return value;
+	return `${value.slice(0, Math.max(0, max - 1))}…`;
+}
+
+function parseComposeRows(output: string): ComposeStatusRow[] {
+	return output
+		.split("\n")
+		.map((line) => line.trim())
+		.filter(Boolean)
+		.map((line) => {
+			try {
+				return JSON.parse(line) as ComposeStatusRow;
+			} catch {
+				return null;
+			}
+		})
+		.filter((row): row is ComposeStatusRow => Boolean(row));
+}
+
+function rowHealth(row: ComposeStatusRow): string {
+	const explicit = row.Health ?? row.HealthStatus;
+	if (explicit && explicit !== "none") return explicit;
+	return row.Status?.match(/\((healthy|unhealthy|starting)\)/i)?.[1] ?? "";
+}
+
+function summarizeRows(rows: ComposeStatusRow[]): { icon: string; count: string; state: string; status: string } {
+	if (rows.length === 0) return { icon: "○", count: "0/0", state: "down", status: "no containers" };
+	const running = rows.filter((row) => /running/i.test(row.State ?? "") || /\bUp\b/i.test(row.Status ?? "")).length;
+	const attention = rows.some((row) => /unhealthy|restart|exited|dead|error/i.test(`${row.State ?? ""} ${row.Status ?? ""} ${rowHealth(row)}`));
+	const starting = rows.some((row) => /starting|created|paused/i.test(`${row.State ?? ""} ${row.Status ?? ""} ${rowHealth(row)}`));
+	const firstStatus = rows.find((row) => row.Status)?.Status ?? rows[0]?.State ?? "unknown";
+	if (attention) return { icon: "✗", count: `${running}/${rows.length}`, state: "attention", status: firstStatus };
+	if (starting) return { icon: "!", count: `${running}/${rows.length}`, state: "starting", status: firstStatus };
+	if (running === rows.length) return { icon: "✓", count: `${running}/${rows.length}`, state: "running", status: firstStatus };
+	if (running > 0) return { icon: "!", count: `${running}/${rows.length}`, state: "partial", status: firstStatus };
+	return { icon: "○", count: `${running}/${rows.length}`, state: "stopped", status: firstStatus };
+}
+
+async function serviceSummary(pi: ExtensionAPI, baseDir: string, service: string): Promise<{ icon: string; count: string; state: string; status: string }> {
 	const checked = checkService(baseDir, service);
-	if (!checked.ok) return "invalid";
+	if (!checked.ok) return { icon: "?", count: "?", state: "invalid", status: "missing compose" };
 	const compose = `${baseDir}/${service}/docker-compose.yml`;
 	try {
 		const res = await pi.exec("docker", ["compose", "-f", compose, "ps", "--format", "json"], { cwd: baseDir, timeout: 10_000 });
-		if (res.code !== 0 || !res.stdout.trim()) return "stopped / no containers";
-		const lines = res.stdout.trim().split("\n").filter(Boolean);
-		const running = lines.filter((line) => /running|healthy|up/i.test(line)).length;
-		const unhealthy = lines.filter((line) => /unhealthy|restart|exited|dead/i.test(line)).length;
-		if (unhealthy > 0) return `${lines.length} containers, attention`;
-		if (running > 0) return `${running}/${lines.length} running`;
-		return `${lines.length} containers`;
+		if (res.code !== 0 || !res.stdout.trim()) return { icon: "○", count: "0/0", state: "down", status: "no containers" };
+		return summarizeRows(parseComposeRows(res.stdout));
 	} catch {
-		return "status unavailable";
+		return { icon: "?", count: "?", state: "unknown", status: "status unavailable" };
 	}
 }
 
@@ -39,7 +80,8 @@ async function buildServiceRows(pi: ExtensionAPI, baseDir: string): Promise<Serv
 	return Promise.all(
 		services.map(async (service) => {
 			const summary = await serviceSummary(pi, baseDir, service);
-			return { name: service, label: `${service.padEnd(24)} ${summary}` };
+			const label = `${summary.icon} ${truncate(service, 24).padEnd(24)} ${summary.count.padEnd(5)} ${summary.state.padEnd(10)} ${truncate(summary.status, 36)}`;
+			return { name: service, label };
 		}),
 	);
 }
@@ -112,7 +154,13 @@ export async function runHomelabDashboard(pi: ExtensionAPI, ctx: ExtensionContex
 	while (true) {
 		const rows = await buildServiceRows(pi, baseDir);
 		const labels = rows.map((row) => row.label);
-		const choice = await ctx.ui.select("Homelab Services", [...labels, "Refresh", "Quit"]);
+		const title = [
+			"Homelab Services",
+			"",
+			"  SERVICE                  CNT   STATE      STATUS",
+			"  ─────────────────────────────────────────────────────────────",
+		].join("\n");
+		const choice = await ctx.ui.select(title, [...labels, "Refresh", "Quit"]);
 		if (!choice || choice === "Quit") return;
 		if (choice === "Refresh") continue;
 
