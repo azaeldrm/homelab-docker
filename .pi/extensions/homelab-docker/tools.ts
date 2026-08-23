@@ -52,7 +52,7 @@ export type HomelabAction = "status" | "list" | "logs" | "up" | "restart" | "dow
 export type HomelabFlags = "p" | "b" | "pb";
 
 const SERVICE_ACTIONS: HomelabAction[] = ["logs", "up", "restart", "down"];
-const PS_TABLE = "table {{.Names}}\t{{.Status}}\t{{.Ports}}";
+const DOCKER_JSON_FORMAT = "json";
 
 // ─── Base dir resolution (testable) ──────────────────────────────────────
 
@@ -163,14 +163,14 @@ export function buildCommand(
 
 	switch (action) {
 		case "list":
-			return { command: "docker", args: ["ps", "-a", "--format", PS_TABLE], ...base, progressLabel: "Listing containers" };
+			return { command: "docker", args: ["ps", "-a", "--format", DOCKER_JSON_FORMAT], ...base, progressLabel: "Listing containers" };
 		case "status":
 			if (!service) {
-				return { command: "docker", args: ["ps", "--format", PS_TABLE], ...base, progressLabel: "Collecting container status" };
+				return { command: "docker", args: ["ps", "--format", DOCKER_JSON_FORMAT], ...base, progressLabel: "Collecting container status" };
 			}
 			return {
 				command: "docker",
-				args: ["compose", "-f", composeFile(service), "ps"],
+				args: ["compose", "-f", composeFile(service), "ps", "--format", "json"],
 				...base,
 				progressLabel: `Status for ${service}`,
 			};
@@ -304,6 +304,79 @@ export interface HomelabDetails {
 	lineCount: number;
 	durationMs: number;
 	logs?: LogDetails;
+	structured?: boolean;
+}
+
+interface ComposePsRow {
+	Name?: string;
+	Names?: string;
+	Service?: string;
+	State?: string;
+	Status?: string;
+	Health?: string;
+	HealthStatus?: string;
+	Ports?: string;
+	RunningFor?: string;
+	Image?: string;
+	Labels?: string;
+}
+
+function truncateCell(value: string, max: number): string {
+	if (value.length <= max) return value;
+	return `${value.slice(0, Math.max(0, max - 1))}…`;
+}
+
+function parseJsonLines(output: string): ComposePsRow[] {
+	return output
+		.split("\n")
+		.map((line) => line.trim())
+		.filter(Boolean)
+		.map((line) => {
+			try {
+				return JSON.parse(line) as ComposePsRow;
+			} catch {
+				return null;
+			}
+		})
+		.filter((row): row is ComposePsRow => Boolean(row));
+}
+
+function labelValue(labels: string | undefined, key: string): string | undefined {
+	if (!labels) return undefined;
+	const prefix = `${key}=`;
+	return labels.split(",").find((label) => label.startsWith(prefix))?.slice(prefix.length);
+}
+
+function health(row: ComposePsRow): string {
+	const h = row.Health ?? row.HealthStatus;
+	if (h && h !== "none") return h;
+	const match = row.Status?.match(/\((healthy|unhealthy|starting)\)/i);
+	return match?.[1] ?? "";
+}
+
+export function formatContainerRows(rows: ComposePsRow[], emptyMessage: string): string {
+	if (rows.length === 0) return emptyMessage;
+
+	const rendered = ["PROJECT        SERVICE          CONTAINER          STATE       HEALTH      STATUS                  PORTS"];
+	for (const row of rows) {
+		const project = truncateCell(labelValue(row.Labels, "com.docker.compose.project") ?? "-", 14).padEnd(14);
+		const service = truncateCell(row.Service ?? labelValue(row.Labels, "com.docker.compose.service") ?? "-", 16).padEnd(16);
+		const name = truncateCell(row.Name ?? row.Names ?? "?", 18).padEnd(18);
+		const state = truncateCell(row.State ?? "?", 11).padEnd(11);
+		const h = truncateCell(health(row), 10).padEnd(10);
+		const status = truncateCell(row.Status ?? row.RunningFor ?? "", 22).padEnd(22);
+		const ports = truncateCell((row.Ports ?? "").replaceAll("0.0.0.0:", "").replaceAll("[::]:", ""), 36);
+		rendered.push(`${project} ${service} ${name} ${state} ${h} ${status} ${ports}`.trimEnd());
+	}
+	return rendered.join("\n");
+}
+
+export function formatComposeStatusJson(output: string): string {
+	return formatContainerRows(parseJsonLines(output), "No compose containers found for this service.");
+}
+
+export function formatDockerPsJson(output: string, all: boolean): string {
+	return formatContainerRows(parseJsonLines(output), all ? "No containers found." : "No running containers found.");
 }
 
 export interface HomelabInput {
@@ -347,8 +420,18 @@ export async function executeHomelabAction(
 	const durationMs = Date.now() - startedAt;
 	let outputText = outcome.output;
 	let logDetails: LogDetails | undefined;
+	let structured = false;
 
-	if (checked.action === "logs") {
+	if (checked.action === "status" && checked.service) {
+		outputText = formatComposeStatusJson(outcome.output);
+		structured = true;
+	} else if (checked.action === "status") {
+		outputText = formatDockerPsJson(outcome.output, false);
+		structured = true;
+	} else if (checked.action === "list") {
+		outputText = formatDockerPsJson(outcome.output, true);
+		structured = true;
+	} else if (checked.action === "logs") {
 		const { text, details } = await processLogOutput(outcome.output, checked.service!);
 		outputText = text;
 		logDetails = details;
@@ -372,6 +455,7 @@ export async function executeHomelabAction(
 			lineCount: outputText.split("\n").length,
 			durationMs,
 			logs: logDetails,
+			structured,
 		},
 	};
 }
@@ -433,14 +517,16 @@ export function renderHomelabResult(
 		if (details?.logs?.fullOutputPath) head += `\n${theme.fg("dim", `Full logs: ${details.logs.fullOutputPath}`)}`;
 		if (details) head += `\n${theme.fg("muted", "(Ctrl+O to collapse)")}`;
 	} else if (output && details?.action === "logs") {
-		const preview = lines.slice(-8);
+		const compactLines = lines.filter((line) => line.trim());
+		const preview = compactLines.slice(-8);
 		for (const line of preview) head += `\n${theme.fg("dim", line)}`;
-		if (lines.length > preview.length) head += `\n${theme.fg("muted", `… ${lines.length - preview.length} earlier lines`)}`;
+		if (compactLines.length > preview.length) head += `\n${theme.fg("muted", `… ${compactLines.length - preview.length} earlier lines`)}`;
 		head += `\n${theme.fg("muted", "(Ctrl+O to expand)")}`;
 	} else if (output && (details?.action === "status" || details?.action === "list")) {
-		const preview = lines.slice(0, 12);
+		const compactLines = lines.filter((line) => line.trim());
+		const preview = compactLines.slice(0, 12);
 		for (const line of preview) head += `\n${theme.fg("dim", line)}`;
-		if (lines.length > preview.length) head += `\n${theme.fg("muted", `… ${lines.length - preview.length} more lines`)}`;
+		if (compactLines.length > preview.length) head += `\n${theme.fg("muted", `… ${compactLines.length - preview.length} more lines`)}`;
 		head += `\n${theme.fg("muted", "(Ctrl+O to expand)")}`;
 	} else {
 		head += ` ${theme.fg("muted", "(Ctrl+O to expand)")}`;

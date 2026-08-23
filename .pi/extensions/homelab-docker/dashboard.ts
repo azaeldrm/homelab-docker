@@ -4,6 +4,7 @@ import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-a
 import {
 	checkService,
 	DEFAULT_LOG_TAIL,
+	executeHomelabAction,
 	listServices,
 	resolveBaseDir,
 	type HomelabAction,
@@ -66,9 +67,19 @@ export interface DashboardActionRunner {
 	(command: string, params: { action: HomelabAction; service?: string; flags?: HomelabFlags; tail?: number }): Promise<void>;
 }
 
-async function serviceActionLoop(_pi: ExtensionAPI, ctx: ExtensionContext, service: string, runAction: DashboardActionRunner): Promise<"back" | "refresh" | "quit"> {
+async function selectedServiceStatus(pi: ExtensionAPI, ctx: ExtensionContext, service: string): Promise<string> {
+	try {
+		const result = await executeHomelabAction(pi, ctx.cwd, { action: "status", service });
+		return result.text;
+	} catch (err) {
+		return `Status unavailable: ${err instanceof Error ? err.message : String(err)}`;
+	}
+}
+
+async function serviceActionLoop(pi: ExtensionAPI, ctx: ExtensionContext, service: string, runAction: DashboardActionRunner): Promise<"back" | "refresh" | "quit"> {
 	while (true) {
-		const choice = await ctx.ui.select(`${service} — choose action`, [
+		const status = await selectedServiceStatus(pi, ctx, service);
+		const choice = await ctx.ui.select(`${service} — current status\n\n${status}\n\nChoose action`, [
 			"Status",
 			`Logs (tail ${DEFAULT_LOG_TAIL})`,
 			"Logs (tail 200)",
