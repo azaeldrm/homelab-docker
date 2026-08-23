@@ -9,7 +9,6 @@ import {
 	type HomelabAction,
 	type HomelabFlags,
 } from "./tools.ts";
-import { runHomelabCommandAction } from "./command.ts";
 
 interface ServiceRow {
 	name: string;
@@ -36,12 +35,12 @@ async function serviceSummary(pi: ExtensionAPI, baseDir: string, service: string
 
 async function buildServiceRows(pi: ExtensionAPI, baseDir: string): Promise<ServiceRow[]> {
 	const services = listServices(baseDir);
-	const rows: ServiceRow[] = [];
-	for (const service of services) {
-		const summary = await serviceSummary(pi, baseDir, service);
-		rows.push({ name: service, label: `${service.padEnd(24)} ${summary}` });
-	}
-	return rows;
+	return Promise.all(
+		services.map(async (service) => {
+			const summary = await serviceSummary(pi, baseDir, service);
+			return { name: service, label: `${service.padEnd(24)} ${summary}` };
+		}),
+	);
 }
 
 function parseAction(choice: string): { action: HomelabAction; tail?: number; flags?: HomelabFlags } | null {
@@ -63,7 +62,11 @@ function parseAction(choice: string): { action: HomelabAction; tail?: number; fl
 	}
 }
 
-async function serviceActionLoop(pi: ExtensionAPI, ctx: ExtensionContext, service: string): Promise<"back" | "refresh" | "quit"> {
+export interface DashboardActionRunner {
+	(command: string, params: { action: HomelabAction; service?: string; flags?: HomelabFlags; tail?: number }): Promise<void>;
+}
+
+async function serviceActionLoop(_pi: ExtensionAPI, ctx: ExtensionContext, service: string, runAction: DashboardActionRunner): Promise<"back" | "refresh" | "quit"> {
 	while (true) {
 		const choice = await ctx.ui.select(`${service} — choose action`, [
 			"Status",
@@ -82,7 +85,7 @@ async function serviceActionLoop(pi: ExtensionAPI, ctx: ExtensionContext, servic
 
 		const action = parseAction(choice);
 		if (!action) continue;
-		await runHomelabCommandAction(pi, ctx, `homelab ${action.action} ${service}${action.tail ? ` ${action.tail}` : ""}`, {
+		await runAction(`homelab ${action.action} ${service}${action.tail ? ` ${action.tail}` : ""}`, {
 			action: action.action,
 			service,
 			flags: action.flags,
@@ -91,7 +94,7 @@ async function serviceActionLoop(pi: ExtensionAPI, ctx: ExtensionContext, servic
 	}
 }
 
-export async function runHomelabDashboard(pi: ExtensionAPI, ctx: ExtensionContext): Promise<void> {
+export async function runHomelabDashboard(pi: ExtensionAPI, ctx: ExtensionContext, runAction: DashboardActionRunner): Promise<void> {
 	if (!ctx.hasUI) {
 		ctx.ui.notify("/homelab dashboard requires an interactive UI. Use /homelab list in headless contexts.", "error");
 		return;
@@ -107,7 +110,7 @@ export async function runHomelabDashboard(pi: ExtensionAPI, ctx: ExtensionContex
 
 		const row = rows.find((candidate) => candidate.label === choice);
 		if (!row) continue;
-		const next = await serviceActionLoop(pi, ctx, row.name);
+		const next = await serviceActionLoop(pi, ctx, row.name, runAction);
 		if (next === "quit") return;
 		if (next === "refresh") continue;
 	}

@@ -442,13 +442,6 @@ export function renderHomelabResult(
 // ─── Tool registration ───────────────────────────────────────────────────
 
 export function registerHomelabTool(pi: ExtensionAPI) {
-	let cachedBaseDir: string | null = null;
-
-	const getBaseDir = (cwd: string): string => {
-		if (!cachedBaseDir) cachedBaseDir = resolveBaseDir(cwd);
-		return cachedBaseDir;
-	};
-
 	pi.registerTool({
 		name: "homelab",
 		label: "Homelab",
@@ -484,65 +477,18 @@ export function registerHomelabTool(pi: ExtensionAPI) {
 		}),
 
 		async execute(_toolCallId, params, signal, onUpdate, ctx) {
-			const checked = checkParams(params.action, params.service, params.flags, params.tail);
-			if (!checked.ok) throw new Error(checked.error);
-
-			const baseDir = getBaseDir(ctx.cwd);
-			if (checked.service) {
-				const svc = checkService(baseDir, checked.service);
-				if (!svc.ok) throw new Error(svc.error);
-			}
-			if ((params.action === "up" || params.action === "restart" || params.action === "down") &&
-				!fs.existsSync(path.join(baseDir, MANAGE_SCRIPT))) {
-				throw new Error(`${MANAGE_SCRIPT} not found in ${baseDir} — cannot run ${params.action}`);
-			}
-
-			const cmd = buildCommand(baseDir, checked.action, checked.service, checked.flags, checked.tail);
-			const startedAt = Date.now();
-			const onProgress = (label: string, elapsedMs: number) => {
-				onUpdate?.({
-					content: [{ type: "text", text: `${label}… (${Math.round(elapsedMs / 1000)}s elapsed)` }],
-				});
-			};
-
-			const outcome = await execHomelabCommand(
-				(command, args, options) => pi.exec(command, args, options),
-				cmd,
+			const result = await executeHomelabAction(
+				pi,
+				ctx.cwd,
+				params,
 				signal,
-				onProgress,
+				(label, elapsedMs) => {
+					onUpdate?.({
+						content: [{ type: "text", text: `${label}… (${Math.round(elapsedMs / 1000)}s elapsed)` }],
+					});
+				},
 			);
-			if (!outcome.ok) throw new Error(outcome.error + (outcome.output ? `\n${outcome.output.slice(-4000)}` : ""));
-
-			const durationMs = Date.now() - startedAt;
-			let outputText = outcome.output;
-			let logDetails: LogDetails | undefined;
-
-			if (checked.action === "logs") {
-				const { text, details } = await processLogOutput(outcome.output, checked.service!);
-				outputText = text;
-				logDetails = details;
-				if (details.truncated && details.fullOutputPath) {
-					outputText += `\n\n[Showing the last ${details.outputLines} of ${details.totalLines} lines (${formatSize(details.totalBytes)}). Full output saved to: ${details.fullOutputPath}]`;
-				}
-			} else {
-				// Guard against unbounded up/restart progress output.
-				const trunc = truncateTail(outputText, { maxLines: DEFAULT_MAX_LINES, maxBytes: DEFAULT_MAX_BYTES });
-				outputText = trunc.content;
-			}
-
-			if (!outputText.trim()) outputText = "(no output)";
-
-			const details: HomelabDetails = {
-				action: checked.action,
-				service: checked.service,
-				flags: checked.flags,
-				tail: checked.action === "logs" ? checked.tail : undefined,
-				lineCount: outputText.split("\n").length,
-				durationMs,
-				logs: logDetails,
-			};
-
-			return { content: [{ type: "text", text: outputText }], details };
+			return { content: [{ type: "text", text: result.text }], details: result.details };
 		},
 
 		// ── Rendering ──

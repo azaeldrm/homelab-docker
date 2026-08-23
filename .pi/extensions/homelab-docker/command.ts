@@ -11,6 +11,7 @@ import { Text } from "@earendil-works/pi-tui";
 import {
 	AUTO_DENY_TIMEOUT_MS,
 	DEFAULT_LOG_TAIL,
+	MAX_LOG_TAIL,
 	executeHomelabAction,
 	listServices,
 	renderHomelabResult,
@@ -76,7 +77,9 @@ export function parseHomelabCommand(args: string): HomelabCommandParseResult {
 			let tail = DEFAULT_LOG_TAIL;
 			if (rawThird !== undefined) {
 				tail = Number(rawThird);
-				if (!Number.isInteger(tail) || tail < 1) return { ok: false, error: `Invalid log tail: ${rawThird}. Use a positive integer.` };
+				if (!Number.isInteger(tail) || tail < 1 || tail > MAX_LOG_TAIL) {
+					return { ok: false, error: `Invalid log tail: ${rawThird}. Use an integer between 1 and ${MAX_LOG_TAIL}.` };
+				}
 			}
 			return { ok: true, dashboard: false, action, service: rawService, tail };
 		}
@@ -130,15 +133,18 @@ export async function runHomelabCommandAction(
 	}
 
 	ctx.ui.notify(`Running ${command}`, "info");
-	const result = await executeHomelabAction(
-		pi,
-		ctx.cwd,
-		params,
-		undefined,
-		(label, elapsedMs) => ctx.ui.setStatus("homelab-command", ctx.ui.theme.fg("warning", `${label}… (${Math.round(elapsedMs / 1000)}s)`)),
-	);
-	ctx.ui.setStatus("homelab-command", undefined);
-	await appendHomelabCommandResult(pi, command, result.text, result.details);
+	try {
+		const result = await executeHomelabAction(
+			pi,
+			ctx.cwd,
+			params,
+			undefined,
+			(label, elapsedMs) => ctx.ui.setStatus("homelab-command", ctx.ui.theme.fg("warning", `${label}… (${Math.round(elapsedMs / 1000)}s)`)),
+		);
+		await appendHomelabCommandResult(pi, command, result.text, result.details);
+	} finally {
+		ctx.ui.setStatus("homelab-command", undefined);
+	}
 }
 
 export function registerHomelabCommand(pi: ExtensionAPI) {
@@ -173,7 +179,7 @@ export function registerHomelabCommand(pi: ExtensionAPI) {
 				return;
 			}
 			if (parsed.dashboard) {
-				await runHomelabDashboard(pi, ctx);
+				await runHomelabDashboard(pi, ctx, (command, params) => runHomelabCommandAction(pi, ctx, command, params));
 				return;
 			}
 			await runHomelabCommandAction(pi, ctx, `homelab ${args.trim()}`, parsed);
