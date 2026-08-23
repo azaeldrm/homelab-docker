@@ -432,6 +432,16 @@ export function renderHomelabResult(
 		if (lines.length > 25) head += `\n${theme.fg("muted", `… ${lines.length - 25} more lines`)}`;
 		if (details?.logs?.fullOutputPath) head += `\n${theme.fg("dim", `Full logs: ${details.logs.fullOutputPath}`)}`;
 		if (details) head += `\n${theme.fg("muted", "(Ctrl+O to collapse)")}`;
+	} else if (output && details?.action === "logs") {
+		const preview = lines.slice(-8);
+		for (const line of preview) head += `\n${theme.fg("dim", line)}`;
+		if (lines.length > preview.length) head += `\n${theme.fg("muted", `… ${lines.length - preview.length} earlier lines`)}`;
+		head += `\n${theme.fg("muted", "(Ctrl+O to expand)")}`;
+	} else if (output && (details?.action === "status" || details?.action === "list")) {
+		const preview = lines.slice(0, 12);
+		for (const line of preview) head += `\n${theme.fg("dim", line)}`;
+		if (lines.length > preview.length) head += `\n${theme.fg("muted", `… ${lines.length - preview.length} more lines`)}`;
+		head += `\n${theme.fg("muted", "(Ctrl+O to expand)")}`;
 	} else {
 		head += ` ${theme.fg("muted", "(Ctrl+O to expand)")}`;
 	}
