@@ -1,6 +1,7 @@
 # ─── Environment & Secrets ───────────────────────────────
 .env
 docker-compose.env
+*.bak*
 secrets/
 sensitive-patterns.txt
 secrets.yaml
