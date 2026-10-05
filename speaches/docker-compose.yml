@@ -1,0 +1,28 @@
+services:
+  speaches:
+    image: ghcr.io/speaches-ai/speaches:latest-cuda
+    container_name: speaches
+    restart: unless-stopped
+    volumes:
+      - speaches-hf-cache:/home/ubuntu/.cache/huggingface/hub
+    environment:
+      # Keep models loaded between requests (-1 = never unload)
+      - WHISPER__TTL=${WHISPER__TTL:--1}
+      # Gradio UI phones home to api.gradio.app / huggingface.co on startup
+      - ENABLE_UI=${ENABLE_UI:-false}
+    networks:
+      - ollama-net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  speaches-hf-cache:
+
+networks:
+  ollama-net:
+    external: true
