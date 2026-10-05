@@ -1,0 +1,19 @@
+# ─── Benchmarks report (static site) ───
+# Serves the benchmark reports: / = Flash-Next engine comparison (strata/report/public), /llama-cpp/ = the 27B tuning report.
+# Tailscale and loopback only (not the LAN).
+services:
+  benchmarks-site:
+    image: python:3.12-slim
+    container_name: benchmarks-site
+    restart: unless-stopped
+    command: ["python", "-m", "http.server", "8000", "--directory", "/site"]
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "${TAILSCALE_IP}:${HOST_PORT}:8000"
+      - "127.0.0.1:${HOST_PORT}:8000"
+    volumes:
+      # Read-only. SITE_DIR is the site root; LLAMA_SITE_DIR is mounted at /site/llama-cpp (its mountpoint dir is created by strata/report/build.py).
+      - ${SITE_DIR}:/site:ro
+      - ${LLAMA_SITE_DIR}:/site/llama-cpp:ro
