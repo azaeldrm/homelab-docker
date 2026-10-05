@@ -1,9 +1,9 @@
 # hermes/docker-compose.yml
 # Hermes Agent — self-hosted agent harness (NousResearch) pointed at the
-# local llama-cpp OpenAI-compatible endpoint (127.0.0.1:11435).
+# local OpenAI-compatible endpoint (127.0.0.1:11435): the `strata` service since 2026-10-05 (llama-cpp before).
 #
 # ─── Networking ─────────────────────────────────────────────────────────────
-# Uses host networking (upstream default) so the agent can reach llama-cpp on
+# Uses host networking (upstream default) so the agent can reach the model server on
 # the host loopback (127.0.0.1:11435). The dashboard is bound to all interfaces
 # (:9119) so the homelab Caddy reaches it at COMPUTE_IP:9119 and it's available
 # over Tailscale — the dashboard requires an auth provider on any non-loopback

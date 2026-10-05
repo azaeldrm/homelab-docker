@@ -15,6 +15,7 @@ This repository manages Docker Compose configurations for various services runni
 
 ### AI & Machine Learning
 - **Ollama**: A platform for hosting and managing AI models locally.
+- **Strata**: The main local LLM server since 2026-10-05: Qwen3.8-Flash-Next (IQ3_S) on the Strata engine, OpenAI- and Anthropic-compatible on port 11435 (loopback, Tailscale and `ollama-net`). It replaced llama-cpp, which, like Ollama, is now stopped; see `/srv/code/benchmarks/strata/hosting/RUNBOOK.md`.
 - **Open-WebUI**: A modern, extensible web interface for interacting with locally hosted AI models.
 - **Jupyter-PyTorch**: A Jupyter Notebook environment preconfigured with PyTorch for machine learning tasks.
 - **Kokoro FastAPI**: A GPU-accelerated FastAPI service.
@@ -68,5 +69,5 @@ Follow these steps to set up your homelab:
 Many services are connected to external networks defined in their respective docker-compose files:
 
 - **caddy-net**: Used by Caddy, Glance, Beszel Hub, Syncthing, and Vaultwarden
-- **ollama-net**: Used by Kokoro FastAPI
+- **ollama-net**: Used by Ollama, Strata (and llama-cpp when it runs), Open WebUI, Kokoro FastAPI, Speaches, Whisper, n8n, Karakeep, Jupyter-PyTorch and Murmur
 - **media-net**: Used by ARR, Jellyfin, and qbittorrent

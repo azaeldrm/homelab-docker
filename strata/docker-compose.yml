@@ -1,0 +1,54 @@
+# ─── Strata: Qwen3.8-Flash-Next on the Strata engine ───
+# Local OpenAI- and Anthropic-compatible model server. Replaces llama-cpp as the main LLM service and takes over its port (11435), so clients
+# that pointed at llama-cpp (Hermes, Pi) keep working: base URL http://127.0.0.1:11435/v1 (or the Tailscale address), any API key, any model name.
+# Reachable: loopback, Tailscale, and other containers on ollama-net as http://strata:8080/v1. NOT bound to the LAN.
+# Benchmarks and why this engine: /srv/code/benchmarks/strata (report at http://homelab-compute:8099). Do not run it beside llama-cpp, ollama or the bench-* containers: all want both GPUs.
+services:
+  strata:
+    image: strata:${STRATA_VERSION}
+    # Built once from the pinned upstream tag (sm_86 only, no vision encoder): `mc strata u b`, or `docker compose build`.
+    build:
+      context: https://github.com/Niko1221/Strata.git#${STRATA_VERSION}
+      args:
+        CUDA_ARCHITECTURES: "86"
+        BUILD_VISION: "0"
+    container_name: strata
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:${HOST_PORT}:8080"
+      - "${TAILSCALE_IP}:${HOST_PORT}:8080"
+
+    volumes:
+      # Pack, MTP layer and per-quant config (written by the first-run setup); named volume = survives container recreation.
+      - strata-data:/data
+      # GGUF files, one folder per quant (data/ is git-ignored). Writable: Strata writes small .done markers beside the files.
+      - ./data/models:/models
+
+    environment:
+      FAMILY: qwen
+      MODEL: ${QUANT}          # IQ3_S or IQ3_XXS; picks /data/config/strata-<quant>.json
+      CONTEXT: "${CTX_SIZE}"
+      VISION: "no"
+      GPUS: all                # layer split across both 3090s, per-card expert caches
+      KV: int8                 # 8-bit KV; from 64K the KV streams from RAM (VRAM stays flat)
+      LOW_RAM: "off"           # all experts pinned in RAM (setup cannot see a container's memory limit, so say it explicitly)
+      # DNS-rebinding protection answers only to these host names (IP addresses always pass): the container name for other containers
+      # on ollama-net, and this machine's Tailscale names. Add a name here if a client uses another one.
+      STRATA_ALLOWED_HOSTS: "${ALLOWED_HOSTS}"
+
+    gpus: all
+    ulimits:
+      memlock: -1              # Strata page-locks ~47-55 GB of experts
+
+    networks:
+      - ollama-net
+
+networks:
+  ollama-net:
+    external: true
+
+volumes:
+  strata-data:
+    name: strata_data
+    external: true             # created once and filled by the first-run setup (docker volume create strata_data); never removed by `down`

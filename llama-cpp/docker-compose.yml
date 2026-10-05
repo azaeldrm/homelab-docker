@@ -1,3 +1,5 @@
+# STOPPED 2026-10-05: replaced by the `strata` service, which now owns port 11435 and both GPUs. Do not start both.
+# To go back: `mc strata d`, then `mc llama-cpp u` (see /srv/code/benchmarks/strata/hosting/RUNBOOK.md, section "Going back").
 services:
   llama-cpp:
     image: ${IMAGE}
@@ -6,15 +8,20 @@ services:
 
     ports:
       - "127.0.0.1:${HOST_PORT}:8080"
+      - "${TAILSCALE_IP}:${HOST_PORT}:8080"
 
     volumes:
       - ./data/models:/models:ro
 
     command:
-      - -m
-      - ${MODEL_PATH}
-      - --alias
-      - ${MODEL_ALIAS}
+      # Router mode: do not pass -m/--model here.
+      - --models-dir
+      - /models
+      - --models-max
+      - "${MODELS_MAX}"
+      # Keep the single configured model ready for Hermes after each restart.
+      - --models-autoload
+      - --jinja
       - --host
       - 0.0.0.0
       - --port
@@ -47,5 +54,17 @@ services:
       - --fit
       - "${FIT}"
       - --no-context-shift
+      # Speculative decoding: none | draft-mtp | ngram-mod | draft-mtp,ngram-mod (see .env)
+      - --spec-type
+      - "${SPEC_TYPE:-none}"
 
     gpus: all
+    # Tensor split mode moves data between the GPUs with NCCL, which needs more than Docker's 64 MB /dev/shm (system RAM, not VRAM)
+    shm_size: "2gb"
+
+    networks:
+      - ollama-net
+
+networks:
+  ollama-net:
+    external: true
