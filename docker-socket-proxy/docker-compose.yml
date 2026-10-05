@@ -4,7 +4,7 @@ services:
     container_name: docker-socket-proxy
     restart: unless-stopped
     ports:
-      - "2375:2375"
+      - "${TAILSCALE_IP}:2375:2375"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
