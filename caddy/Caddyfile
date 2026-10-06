@@ -91,6 +91,10 @@ hermes.compute.{$DOMAIN} {
   tls internal
   reverse_proxy {$COMPUTE_IP}:9119
 }
+stronghold.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:8118
+}
 # ==================================
 
 
