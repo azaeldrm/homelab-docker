@@ -1,4 +1,22 @@
 services:
+  # Staging slot. Caddy already routes ezcopper.test.{$DOMAIN} and
+  # monitor.ezcopper.test.{$DOMAIN} here; its ./data-test keeps a separate browser
+  # profile, activity history and settings from the live service.
+  ezcopper-test:
+    image: ghcr.io/azaeldrm/ezcopper:sha-4136364
+    container_name: ezcopper-test
+    volumes:
+      - ./data-test:/data
+    env_file:
+      - .env
+    environment:
+      - ${DISPLAY:-99}
+    shm_size: "1gb"
+    restart: unless-stopped
+    stop_grace_period: ${STOP_GRACE_PERIOD:-10s}
+    networks:
+      - caddy-net
+
   ezcopper:
     image: ghcr.io/azaeldrm/ezcopper:sha-32be232
     container_name: ezcopper

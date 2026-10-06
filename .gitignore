@@ -66,3 +66,6 @@ jellyfin/cache/
 # ─── Agentic ──────────────────────────────────────────────
 .claude
 .opencode
+
+# Staging slot data: browser profile, activity history, settings — never commit
+ezcopper/data-test/
