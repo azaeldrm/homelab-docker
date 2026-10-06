@@ -3,7 +3,7 @@ services:
   # monitor.ezcopper.test.{$DOMAIN} here; its ./data-test keeps a separate browser
   # profile, activity history and settings from the live service.
   ezcopper-test:
-    image: ghcr.io/azaeldrm/ezcopper:sha-4136364
+    image: ghcr.io/azaeldrm/ezcopper:sha-b24e356
     container_name: ezcopper-test
     volumes:
       - ./data-test:/data
@@ -18,7 +18,7 @@ services:
       - caddy-net
 
   ezcopper:
-    image: ghcr.io/azaeldrm/ezcopper:sha-4136364
+    image: ghcr.io/azaeldrm/ezcopper:sha-b24e356
     container_name: ezcopper
     volumes:
       - ./data:/data
