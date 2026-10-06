@@ -87,6 +87,10 @@ syncthing.compute.{$DOMAIN} {
   tls internal
   reverse_proxy {$COMPUTE_IP}:8384
 }
+hermes.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:9119
+}
 # ==================================
 
 

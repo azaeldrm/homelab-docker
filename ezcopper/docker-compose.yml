@@ -1,6 +1,6 @@
 services:
   ezcopper:
-    image: ghcr.io/azaeldrm/ezcopper:latest
+    image: ghcr.io/azaeldrm/ezcopper:sha-32be232
     container_name: ezcopper
     volumes:
       - ./data:/data
