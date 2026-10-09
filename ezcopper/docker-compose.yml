@@ -18,7 +18,7 @@ services:
       - caddy-net
 
   ezcopper:
-    image: ghcr.io/azaeldrm/ezcopper:sha-08f1cb2
+    image: ghcr.io/azaeldrm/ezcopper:sha-7a86581
     container_name: ezcopper
     volumes:
       - ./data:/data
