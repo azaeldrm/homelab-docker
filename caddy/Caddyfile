@@ -50,6 +50,14 @@ monitor.ezcopper.test.{$DOMAIN} {
   tls internal
   reverse_proxy ezcopper-test:6080
 }
+stronghold.{$DOMAIN} {
+  tls internal
+  reverse_proxy stronghold-stronghold-1:8118
+}
+stronghold.dev.{$DOMAIN} {
+  tls internal
+  reverse_proxy stronghold-dev-stronghold-1:8119
+}
 router.{$DOMAIN} {
   tls internal
   reverse_proxy {$ROUTER_IP}
@@ -91,9 +99,16 @@ hermes.compute.{$DOMAIN} {
   tls internal
   reverse_proxy {$COMPUTE_IP}:9119
 }
-stronghold.compute.{$DOMAIN} {
+# herdr web UI plugin (terminal access): drop a visitor-supplied Tailscale login header
+herdr.compute.{$DOMAIN} {
   tls internal
-  reverse_proxy {$COMPUTE_IP}:8118
+  reverse_proxy {$COMPUTE_IP}:7317 {
+    header_up -Tailscale-User-Login
+  }
+}
+bench.compute.{$DOMAIN} {
+  tls internal
+  reverse_proxy {$COMPUTE_IP}:8099
 }
 # ==================================
 
