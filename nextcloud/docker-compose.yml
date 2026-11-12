@@ -1,0 +1,93 @@
+# nextcloud/docker-compose.yml
+#
+# Self-hosted file sync (Dropbox / Google Drive replacement), Tailscale-only via Caddy.
+# - App code, config, Postgres and Redis live on local NVMe.
+# - User files (data dir) live on the NAS: /volume1/nextcloud -> /mnt/nextcloud (NFSv3, hard).
+# - Files only (Dropbox/Drive role): no other NAS shares, no calendar/contacts/photos.
+# - No published ports: reachable only through caddy (bound to the Tailscale IP).
+#
+# Host prerequisites (run ./host/setup-host.sh with sudo): nfs-common, mnt-nextcloud.mount,
+# and the docker.service drop-in that orders Docker after the NAS mount.
+
+# ─── Shared Nextcloud settings (app + cron) ───
+x-nextcloud: &nextcloud
+  image: docker.io/library/nextcloud:35.0.2-apache
+  restart: unless-stopped
+  env_file:
+    - .env
+  environment:
+    POSTGRES_HOST: nextcloud-db
+    REDIS_HOST: nextcloud-redis
+    NEXTCLOUD_TRUSTED_DOMAINS: nextcloud.${DOMAIN}
+    TRUSTED_PROXIES: 172.18.0.0/16           # caddy-net subnet
+    OVERWRITEHOST: nextcloud.${DOMAIN}
+    OVERWRITEPROTOCOL: https
+    OVERWRITECLIURL: https://nextcloud.${DOMAIN}
+    PHP_MEMORY_LIMIT: 1G
+    PHP_UPLOAD_LIMIT: 16G
+  volumes:
+    - ./data/html:/var/www/html              # code, config, apps (local)
+    # NAS mount uses rslave so a (re)mount on the host is visible inside the container
+    - type: bind
+      source: /mnt/nextcloud
+      target: /var/www/html/data
+      bind:
+        propagation: rslave
+  depends_on:
+    nextcloud-db:
+      condition: service_healthy
+    nextcloud-redis:
+      condition: service_healthy
+
+services:
+  # ─── Web app ───
+  nextcloud:
+    <<: *nextcloud
+    container_name: nextcloud
+    networks:
+      - default
+      - caddy-net
+
+  # ─── Background jobs (replaces AJAX cron) ───
+  nextcloud-cron:
+    <<: *nextcloud
+    container_name: nextcloud-cron
+    entrypoint: /cron.sh
+    networks:
+      - default
+
+  # ─── Database (local disk only; never on NFS) ───
+  nextcloud-db:
+    image: docker.io/library/postgres:17
+    container_name: nextcloud-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default
+
+  # ─── Cache + transactional file locking ───
+  nextcloud-redis:
+    image: docker.io/library/redis:8-alpine
+    container_name: nextcloud-redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - default
+
+networks:
+  caddy-net:
+    external: true

@@ -1,0 +1,17 @@
+# /etc/systemd/system/mnt-nextcloud.mount
+# Nextcloud data dir on the Synology. "hard" (not soft): a NAS outage blocks writes
+# instead of failing them mid-file, which would corrupt user files.
+[Unit]
+Description=NAS: Nextcloud data (/volume1/nextcloud)
+Wants=network-online.target
+After=network-online.target
+
+[Mount]
+What=192.168.0.76:/volume1/nextcloud
+Where=/mnt/nextcloud
+Type=nfs
+Options=rw,vers=3,proto=tcp,hard,timeo=600,retrans=2,noatime,_netdev,noresvport
+TimeoutSec=60
+
+[Install]
+WantedBy=multi-user.target
