@@ -58,6 +58,14 @@ stronghold.dev.{$DOMAIN} {
   tls internal
   reverse_proxy stronghold-dev-stronghold-1:8119
 }
+glkvm.{$DOMAIN} {
+  tls internal
+  reverse_proxy https://{$GLKVM_IP} {
+    transport http {
+      tls_insecure_skip_verify
+    }
+  }
+}
 router.{$DOMAIN} {
   tls internal
   reverse_proxy {$ROUTER_IP}
